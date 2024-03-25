@@ -1,0 +1,14 @@
+*{
+    box-sizing: border-box;
+}
+
+body{
+    margin: 0;
+    padding: 0;
+    background-color: #232023;
+}
+
+img{
+    width: 200px;
+    border-radius: 100px;
+}
