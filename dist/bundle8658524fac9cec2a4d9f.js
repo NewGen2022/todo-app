@@ -45,8 +45,13 @@ ___CSS_LOADER_EXPORT___.push([module.id, `*{
 body{
     margin: 0;
     padding: 0;
-    background-color: aqua;
-}`, "",{"version":3,"sources":["webpack://./src/styles/main.css"],"names":[],"mappings":"AAAA;IACI,sBAAsB;AAC1B;;AAEA;IACI,SAAS;IACT,UAAU;IACV,sBAAsB;AAC1B","sourcesContent":["*{\r\n    box-sizing: border-box;\r\n}\r\n\r\nbody{\r\n    margin: 0;\r\n    padding: 0;\r\n    background-color: aqua;\r\n}"],"sourceRoot":""}]);
+    background-color: #232023;
+}
+
+img{
+    width: 200px;
+    border-radius: 100px;
+}`, "",{"version":3,"sources":["webpack://./src/styles/main.css"],"names":[],"mappings":"AAAA;IACI,sBAAsB;AAC1B;;AAEA;IACI,SAAS;IACT,UAAU;IACV,yBAAyB;AAC7B;;AAEA;IACI,YAAY;IACZ,oBAAoB;AACxB","sourcesContent":["*{\r\n    box-sizing: border-box;\r\n}\r\n\r\nbody{\r\n    margin: 0;\r\n    padding: 0;\r\n    background-color: #232023;\r\n}\r\n\r\nimg{\r\n    width: 200px;\r\n    border-radius: 100px;\r\n}"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -493,13 +498,13 @@ module.exports = styleTagTransform;
 
 /***/ }),
 
-/***/ "./src/assets/honey-badger.jpg":
-/*!*************************************!*\
-  !*** ./src/assets/honey-badger.jpg ***!
-  \*************************************/
+/***/ "./src/assets/transparent-bg-honey-badger.png":
+/*!****************************************************!*\
+  !*** ./src/assets/transparent-bg-honey-badger.png ***!
+  \****************************************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-module.exports = __webpack_require__.p + "honey-badger.jpg";
+module.exports = __webpack_require__.p + "transparent-bg-honey-badger.png";
 
 /***/ })
 
@@ -620,13 +625,17 @@ var __webpack_exports__ = {};
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _sidebar__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./sidebar */ "./src/sidebar.js");
 /* harmony import */ var _styles_main_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./styles/main.css */ "./src/styles/main.css");
-/* harmony import */ var _assets_honey_badger_jpg__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./assets/honey-badger.jpg */ "./src/assets/honey-badger.jpg");
+/* harmony import */ var _assets_transparent_bg_honey_badger_png__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./assets/transparent-bg-honey-badger.png */ "./src/assets/transparent-bg-honey-badger.png");
 
 
 
+var body = document.querySelector("body");
+var img = document.createElement("img");
+img.src = _assets_transparent_bg_honey_badger_png__WEBPACK_IMPORTED_MODULE_2__;
+body.appendChild(img);
 (0,_sidebar__WEBPACK_IMPORTED_MODULE_0__["default"])();
 })();
 
 /******/ })()
 ;
-//# sourceMappingURL=bundleeeff81f84d31db032a29.js.map
+//# sourceMappingURL=bundle8658524fac9cec2a4d9f.js.map
