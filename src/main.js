@@ -1,6 +1,7 @@
 import Sidebar from "./sidebar";
+import Content from "./mainContent";
 
-export default function generateContent(){
+export default function generateMain(){
     const body = document.querySelector("body");
 
     const main = document.createElement("div");
@@ -8,4 +9,5 @@ export default function generateContent(){
     body.appendChild(main);
 
     const sidebar = new Sidebar();
+    const content = new Content();
 }
