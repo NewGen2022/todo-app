@@ -6,7 +6,7 @@ export default class Sidebar{
     constructor(){
         const main = document.getElementById("main");
     
-        const sidebar = document.createElement("sidebar");
+        const sidebar = document.createElement("div");
         sidebar.setAttribute("id", "sidebar");
     
         const inbox = document.createElement("button");
@@ -37,7 +37,6 @@ export default class Sidebar{
         today.setAttribute("id", "today");
         thisWeek.setAttribute("id", "thisWeek");
     
-        
         const projectsHeader = document.createElement("h2");
         projectsHeader.textContent = "Projects";
 
@@ -55,9 +54,4 @@ export default class Sidebar{
 
         main.appendChild(sidebar);
     };
-
-    generateContent(){
-        
-    };
-
 };
