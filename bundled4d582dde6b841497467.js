@@ -2,20 +2,79 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./src/sidebar.js":
+/***/ "./src/content.js":
 /*!************************!*\
-  !*** ./src/sidebar.js ***!
+  !*** ./src/content.js ***!
   \************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */   "default": () => (/* binding */ generateContent)
 /* harmony export */ });
-function generateSidebar() {
-  console.log(1234567);
+function generateContent() {
+  var body = document.querySelector("body");
+  var main = document.createElement("div");
+  main.setAttribute("id", "main");
+  body.appendChild(main);
 }
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (generateSidebar);
+
+/***/ }),
+
+/***/ "./src/footer.js":
+/*!***********************!*\
+  !*** ./src/footer.js ***!
+  \***********************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ generateFooter)
+/* harmony export */ });
+/* harmony import */ var _assets_github_mark_white_svg__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./assets/github-mark-white.svg */ "./src/assets/github-mark-white.svg");
+
+function generateFooter() {
+  var body = document.querySelector("body");
+  var footerTag = document.createElement("div");
+  footerTag.setAttribute("id", "footer");
+  var footerText = document.createTextNode("Copyright © 2024 NewGen2022");
+  footerTag.appendChild(footerText);
+  var footerImg = document.createElement("img");
+  footerImg.src = _assets_github_mark_white_svg__WEBPACK_IMPORTED_MODULE_0__;
+  footerTag.appendChild(footerText);
+  footerTag.appendChild(footerImg);
+  body.appendChild(footerTag);
+}
+;
+
+/***/ }),
+
+/***/ "./src/header.js":
+/*!***********************!*\
+  !*** ./src/header.js ***!
+  \***********************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ generateHeader)
+/* harmony export */ });
+/* harmony import */ var _assets_transparent_bg_honey_badger_png__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./assets/transparent-bg-honey-badger.png */ "./src/assets/transparent-bg-honey-badger.png");
+
+function generateHeader() {
+  var body = document.querySelector("body");
+  var headerTag = document.createElement("div");
+  headerTag.setAttribute("id", "header");
+  var headerLogo = document.createElement("img");
+  headerLogo.src = _assets_transparent_bg_honey_badger_png__WEBPACK_IMPORTED_MODULE_0__;
+  headerLogo.setAttribute("id", "logoImg");
+  var headerText = document.createTextNode("ToBadger");
+  headerTag.appendChild(headerText);
+  headerTag.appendChild(headerLogo);
+  headerTag.appendChild(headerText);
+  body.appendChild(headerTag);
+}
+;
 
 /***/ }),
 
@@ -37,6 +96,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
+___CSS_LOADER_EXPORT___.push([module.id, "@import url(https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap);"]);
 // Module
 ___CSS_LOADER_EXPORT___.push([module.id, `*{
     box-sizing: border-box;
@@ -45,13 +105,58 @@ ___CSS_LOADER_EXPORT___.push([module.id, `*{
 body{
     margin: 0;
     padding: 0;
+    font-family: "Poppins", sans-serif;
+    background-color: #232023;
+    color: rgb(213, 213, 213);
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+#logoImg{
+    width: 110px;
+    border-radius: 100px;
+    margin-left: 2vw;
+}
+
+#header{
+    display: flex;
+    align-items: center;
+    font-size: clamp(28px, 5vw, 38px);
+    font-weight: 700;
+    background-color: #5a5a5a;
+    gap: 10px;
+}
+
+
+#main{
+    display: flex;
+    flex-grow: 1;
     background-color: #232023;
 }
 
-img{
-    width: 200px;
-    border-radius: 100px;
-}`, "",{"version":3,"sources":["webpack://./src/styles/main.css"],"names":[],"mappings":"AAAA;IACI,sBAAsB;AAC1B;;AAEA;IACI,SAAS;IACT,UAAU;IACV,yBAAyB;AAC7B;;AAEA;IACI,YAAY;IACZ,oBAAoB;AACxB","sourcesContent":["*{\r\n    box-sizing: border-box;\r\n}\r\n\r\nbody{\r\n    margin: 0;\r\n    padding: 0;\r\n    background-color: #232023;\r\n}\r\n\r\nimg{\r\n    width: 200px;\r\n    border-radius: 100px;\r\n}"],"sourceRoot":""}]);
+
+#footer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    font-weight: 600;
+    background-color: #5a5a5a;
+    font-size: clamp(14px, 1vw, 18px);
+    padding: 10px;
+}
+#footer img{
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+    border-radius: 40px;
+}
+#footer img:hover{
+    box-shadow: 0 0 15px white;
+    transform: scale(1.1);
+}
+`, "",{"version":3,"sources":["webpack://./src/styles/main.css"],"names":[],"mappings":"AAEA;IACI,sBAAsB;AAC1B;;AAEA;IACI,SAAS;IACT,UAAU;IACV,kCAAkC;IAClC,yBAAyB;IACzB,yBAAyB;IACzB,aAAa;IACb,sBAAsB;IACtB,aAAa;AACjB;;AAEA;IACI,YAAY;IACZ,oBAAoB;IACpB,gBAAgB;AACpB;;AAEA;IACI,aAAa;IACb,mBAAmB;IACnB,iCAAiC;IACjC,gBAAgB;IAChB,yBAAyB;IACzB,SAAS;AACb;;;AAGA;IACI,aAAa;IACb,YAAY;IACZ,yBAAyB;AAC7B;;;AAGA;IACI,aAAa;IACb,uBAAuB;IACvB,mBAAmB;IACnB,QAAQ;IACR,gBAAgB;IAChB,yBAAyB;IACzB,iCAAiC;IACjC,aAAa;AACjB;AACA;IACI,WAAW;IACX,YAAY;IACZ,eAAe;IACf,mBAAmB;AACvB;AACA;IACI,0BAA0B;IAC1B,qBAAqB;AACzB","sourcesContent":["@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');\r\n\r\n*{\r\n    box-sizing: border-box;\r\n}\r\n\r\nbody{\r\n    margin: 0;\r\n    padding: 0;\r\n    font-family: \"Poppins\", sans-serif;\r\n    background-color: #232023;\r\n    color: rgb(213, 213, 213);\r\n    display: flex;\r\n    flex-direction: column;\r\n    height: 100vh;\r\n}\r\n\r\n#logoImg{\r\n    width: 110px;\r\n    border-radius: 100px;\r\n    margin-left: 2vw;\r\n}\r\n\r\n#header{\r\n    display: flex;\r\n    align-items: center;\r\n    font-size: clamp(28px, 5vw, 38px);\r\n    font-weight: 700;\r\n    background-color: #5a5a5a;\r\n    gap: 10px;\r\n}\r\n\r\n\r\n#main{\r\n    display: flex;\r\n    flex-grow: 1;\r\n    background-color: #232023;\r\n}\r\n\r\n\r\n#footer{\r\n    display: flex;\r\n    justify-content: center;\r\n    align-items: center;\r\n    gap: 5px;\r\n    font-weight: 600;\r\n    background-color: #5a5a5a;\r\n    font-size: clamp(14px, 1vw, 18px);\r\n    padding: 10px;\r\n}\r\n#footer img{\r\n    width: 25px;\r\n    height: 25px;\r\n    cursor: pointer;\r\n    border-radius: 40px;\r\n}\r\n#footer img:hover{\r\n    box-shadow: 0 0 15px white;\r\n    transform: scale(1.1);\r\n}\r\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -498,6 +603,16 @@ module.exports = styleTagTransform;
 
 /***/ }),
 
+/***/ "./src/assets/github-mark-white.svg":
+/*!******************************************!*\
+  !*** ./src/assets/github-mark-white.svg ***!
+  \******************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+module.exports = __webpack_require__.p + "github-mark-white.svg";
+
+/***/ }),
+
 /***/ "./src/assets/transparent-bg-honey-badger.png":
 /*!****************************************************!*\
   !*** ./src/assets/transparent-bg-honey-badger.png ***!
@@ -623,19 +738,19 @@ var __webpack_exports__ = {};
   !*** ./src/index.js ***!
   \**********************/
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _sidebar__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./sidebar */ "./src/sidebar.js");
-/* harmony import */ var _styles_main_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./styles/main.css */ "./src/styles/main.css");
-/* harmony import */ var _assets_transparent_bg_honey_badger_png__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./assets/transparent-bg-honey-badger.png */ "./src/assets/transparent-bg-honey-badger.png");
+/* harmony import */ var _styles_main_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./styles/main.css */ "./src/styles/main.css");
+/* harmony import */ var _header__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./header */ "./src/header.js");
+/* harmony import */ var _content__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./content */ "./src/content.js");
+/* harmony import */ var _footer__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./footer */ "./src/footer.js");
 
 
 
-var body = document.querySelector("body");
-var img = document.createElement("img");
-img.src = _assets_transparent_bg_honey_badger_png__WEBPACK_IMPORTED_MODULE_2__;
-body.appendChild(img);
-(0,_sidebar__WEBPACK_IMPORTED_MODULE_0__["default"])();
+
+(0,_header__WEBPACK_IMPORTED_MODULE_1__["default"])();
+(0,_content__WEBPACK_IMPORTED_MODULE_2__["default"])();
+(0,_footer__WEBPACK_IMPORTED_MODULE_3__["default"])();
 })();
 
 /******/ })()
 ;
-//# sourceMappingURL=bundle8658524fac9cec2a4d9f.js.map
+//# sourceMappingURL=bundled4d582dde6b841497467.js.map
