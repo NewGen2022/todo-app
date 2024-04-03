@@ -1,12 +1,8 @@
-import generateSidebar from "./sidebar";
 import "./styles/main.css";
-import honeyBadger from "./assets/transparent-bg-honey-badger.png";
+import generateHeader from "./header";
+import generateContent from "./content";
+import generateFooter from "./footer";
 
-const body = document.querySelector("body");
-
-const img = document.createElement("img");
-img.src = honeyBadger;
-
-body.appendChild(img);
-
-generateSidebar();
+generateHeader();
+generateContent();
+generateFooter();
