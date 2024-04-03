@@ -1,5 +1,8 @@
-function generateSidebar(){
-    console.log(1234567);
+class Sidebar{
+    
+    
+
 }
 
-export default generateSidebar;
+
+export default Sidebar;
