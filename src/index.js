@@ -1,6 +1,6 @@
 import "./styles/main.css";
 import generateHeader from "./header";
-import generateContent from "./content";
+import generateContent from "./main";
 import generateFooter from "./footer";
 
 generateHeader();
