@@ -50,6 +50,7 @@ module.exports = {
             title: "Todos",
             filename: "index.html",
             template: "src/template.html",
+            favicon: "./src/assets/to-do-list.png",
         })
     ]
 }
