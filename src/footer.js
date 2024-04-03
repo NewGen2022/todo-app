@@ -9,11 +9,16 @@ export default function generateFooter(){
     const footerText = document.createTextNode("Copyright © 2024 NewGen2022");
     footerTag.appendChild(footerText);
 
+    const footerLink = document.createElement("a");
+    footerLink.href = "https://github.com/NewGen2022";
+    footerLink.target = "_blank";
+
     const footerImg = document.createElement("img");
     footerImg.src = githubMark;
 
+    footerLink.appendChild(footerImg);
     footerTag.appendChild(footerText);
-    footerTag.appendChild(footerImg);
+    footerTag.appendChild(footerLink);
 
     body.appendChild(footerTag);
 };
