@@ -30,13 +30,14 @@ body{
     gap: 10px;
 }
 
-
 #main{
     display: flex;
     flex-grow: 1;
     background-color: #232023;
 }
 
+
+/* SIDEBAR STYLES */
 #sidebar{
     display: flex;
     flex-direction: column;
@@ -85,10 +86,6 @@ body{
     background-image: url('../assets/bulletin-board.png');
 }
 
-h3{
-    font-size: clamp(16px, 2vw, 20px);
-}
-
 #addProjectBtn{
     background-color: #232023;
     margin: 0 10px;
@@ -102,8 +99,22 @@ h3{
     height: 15px;
     background-image: url('../assets/plus-symbol-button.png');
 }
+/* SIDEBAR STYLES */
 
 
+/* CONTENT STYLES */
+#content{
+    padding: 50px clamp(50px, 12vw, 200px);
+}
+
+.headerDay{
+    font-size: 32px;
+    font-weight: 600;
+}
+/* CONTENT STYLES */
+
+
+/* FOOTER STYLES */
 #footer{
     display: flex;
     justify-content: center;
@@ -124,3 +135,5 @@ h3{
     box-shadow: 0 0 5px rgb(9, 183, 0);
     transform: scale(1.1);
 }
+/* FOOTER STYLES */
+
