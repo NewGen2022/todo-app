@@ -3,16 +3,20 @@
 *{
     box-sizing: border-box;
     font-family: "Poppins", sans-serif;
+    color: #d5d5d5;
 }
 
 body{
     margin: 0;
     padding: 0;
     background-color: #232023;
-    color: #d5d5d5;
     display: flex;
     flex-direction: column;
     height: 100vh;
+}
+
+button{
+    cursor: pointer;
 }
 
 #logoImg{
@@ -55,7 +59,6 @@ body{
     padding: 10px 20px;
     font-size: clamp(14px, 2vw, 16px);
     font-weight: 700;
-    cursor: pointer;
     border-radius: 10px;
     margin-bottom: 10px;
     gap: 10px;
@@ -66,6 +69,9 @@ body{
 }
 .buttonDays:active{
     transform: scale(0.99);
+}
+.buttonDays:focus{
+    background-color: #444444;
 }
 
 .with-icon::before {
@@ -104,12 +110,133 @@ body{
 
 /* CONTENT STYLES */
 #content{
+    display: flex;
+    flex-direction: column;
+    flex: 1;
     padding: 50px clamp(50px, 12vw, 200px);
 }
 
 .headerDay{
     font-size: 32px;
     font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.addTaskBtn{
+    border: 2px solid rgb(111, 111, 111);
+    background: none;
+    font-size: 16px;
+    background-color: #2f2d2f;
+    border-radius: 10px;
+    padding: 8px 20px;
+    outline: none;
+    margin-top: 10px;
+}
+.addTaskBtn:hover{
+    border: 2px solid rgb(173, 173, 173);
+    background-color: #696769;
+    transform: scale(1.01);
+}
+.addTaskBtn:active{
+    transform: scale(1);
+}
+
+.tasks{
+    display: flex;
+    flex-direction: column;
+}
+
+.task{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+    cursor: pointer;
+    font-size: 18px;
+    justify-content: center;
+}
+
+.task-info{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.checkbox-name-container{
+    display: flex;
+    gap: 10px;
+}
+
+
+input[type="checkbox"] {
+  appearance: none;
+  background: #eaeaea;
+  outline: none;
+  border: none;
+  height: 1.75em;
+  width: 1.75em;
+  border-radius: 100%;
+  vertical-align: text-bottom;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.5s ease;
+}
+input[type="checkbox"] {
+  border-radius: 10px;
+}
+input[type="checkbox"]::before {
+  content: "";
+  position: absolute;
+  margin: auto;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  overflow: hidden;
+}
+input[type="checkbox"]:checked::before {
+  border-right: 5px solid #2ee700;
+  border-bottom: 6px solid #33ff00;
+  height: 90%;
+  width: 30%;
+  transform: rotate(50deg) translateY(-20%) translateX(-10%);
+}
+input[type="checkbox"]:active, input[type="checkbox"]:focus{
+    background-color: #fff;
+    border: 2px solid #fff;
+    transform: scale(1.05);
+}
+
+.buttons{
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    justify-content: center;
+}
+.buttons img{
+    width: 25px;
+    height: 25px;
+}
+
+.date{
+    background: none;
+    border: 2px solid #747474;
+    border-radius: 5px;
+    width: 100px;
+    outline: none;
+    margin-top: 5px;
+}
+
+.edit, .delete{
+    background: none;
+    border: none;
+}
+
+.edit:hover, .delete:hover{
+    transform: scale(1.07);
+}
+
+.edit:active, .delete:active{
+    transform: scale(0.95);
 }
 /* CONTENT STYLES */
 
@@ -128,7 +255,6 @@ body{
 #footer img{
     width: 25px;
     height: 25px;
-    cursor: pointer;
     border-radius: 40px;
 }
 #footer img:hover{
@@ -136,4 +262,3 @@ body{
     transform: scale(1.1);
 }
 /* FOOTER STYLES */
-
