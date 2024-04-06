@@ -105,6 +105,59 @@ button{
     height: 15px;
     background-image: url('../assets/plus-symbol-button.png');
 }
+
+.add-task-form{
+    display: flex;
+    flex-direction: column;
+    border: 2px solid rgb(127, 127, 127);
+    padding: 30px 40px 20px 40px;
+    border-radius: 10px;
+}
+
+input[type="text"]{
+    border-radius: 5px;
+    border: 1px solid white;
+    margin-bottom: 5px;
+    padding-left: 7px;
+    outline: none;
+    color: #232023;
+    font-weight: 500;
+    font-size: 16px;
+}
+
+input[type="button"]{
+    border-radius: 5px;
+    background-color: #2f2d2f;
+    font-weight: 600;
+    font-size: 12px;
+    padding: 5px 15px;
+    cursor: pointer;
+}
+
+.add-cancel{
+    display: flex;
+    justify-content: end;
+    gap: 5px;
+}
+
+.add-task-form-button{
+    border: 1px solid #2ee700;
+}
+.add-task-form-button:hover{
+    color: #000000;
+    background-color: #2ee700;
+}
+
+.cancel-form-button{
+    border: 1px solid #dd2500;
+}
+.cancel-form-button:hover{
+    background-color: #dd2500;
+}
+
+hr{
+    width: 100%;
+}
 /* SIDEBAR STYLES */
 
 
