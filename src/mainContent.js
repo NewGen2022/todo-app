@@ -7,10 +7,10 @@ export default class Content {
         this.content.setAttribute("id", "content");
         this.main.appendChild(this.content);
         this.allTasks = tasks.getAllTasks();
-        this.addEventListeners();
+        this.sidebarEventListeners();
     }
 
-    addEventListeners() {
+    sidebarEventListeners() {
         const inboxBtn = document.getElementById("inbox");
         const todayBtn = document.getElementById("today");
         const thisWeekBtn = document.getElementById("thisWeek");
@@ -24,35 +24,26 @@ export default class Content {
 
     inboxTasks() {
         this.clearContent();
-
         this.createHeaderDay("Inbox");
-
-        this.displayAllTasks();
-
+        tasks.displayAll();
         this.createAddTaskBtn();
     }
 
     todayTasks() {
         this.clearContent();
-
         this.createHeaderDay("Today");
-
         this.createAddTaskBtn();
     }
 
     thisWeekTasks() {
         this.clearContent();
-
         this.createHeaderDay("This week");
-    
         this.createAddTaskBtn();
     }
 
     createAddProjectBtn() {
         this.clearContent();
-
         this.createHeaderDay("Add Project");
-    
         this.createAddTaskBtn();
     }
 
@@ -60,7 +51,7 @@ export default class Content {
         const headerDay = document.createElement("div");
         headerDay.classList.add("headerDay");
         headerDay.textContent = textContent;
-        
+
         this.content.appendChild(headerDay);
     }
 
@@ -69,12 +60,12 @@ export default class Content {
         btn.classList.add("addTaskBtn");
         btn.textContent = "+ Add task";
 
-        btn.addEventListener("click", () => this.addTaskForm());
+        btn.addEventListener("click", () => this.displayTaskForm());
        
         this.content.appendChild(btn);
     }
 
-    addTaskForm(){
+    displayTaskForm(){
         const addTaskBtn = this.content.querySelector('.addTaskBtn');
         if (addTaskBtn) {
             addTaskBtn.remove();
@@ -91,10 +82,10 @@ export default class Content {
         const buttonContainer = document.createElement("div");
         buttonContainer.classList.add("add-cancel");
 
-        const addTask = document.createElement("input");
+        const addTaskForm = document.createElement("input");
         const cancel = document.createElement("input");
 
-        buttonContainer.appendChild(addTask);
+        buttonContainer.appendChild(addTaskForm);
         buttonContainer.appendChild(cancel);
 
         taskText.type = "text";
@@ -105,11 +96,11 @@ export default class Content {
         date.placeholder = "Due Date";
         date.classList.add("date-form");
 
-        addTask.type = "button";
-        addTask.value = "Add task";
-        addTask.classList.add("add-task-form-button");
-        addTask.addEventListener("click", () => {
-            this.addTask(taskText.value, date.value);
+        addTaskForm.type = "button";
+        addTaskForm.value = "Add task";
+        addTaskForm.classList.add("add-task-form-button");
+        addTaskForm.addEventListener("click", () => {
+            this.displayNewTask(taskText.value, date.value);
             taskProperties.remove();
             this.createAddTaskBtn()
         });
@@ -130,23 +121,11 @@ export default class Content {
         this.content.appendChild(taskProperties);
     }
 
-    addTask(taskText, date=None){
+    displayNewTask(taskText, date=None){
         if(taskText){
             const newTask = new Task(taskText, date);
         }
-        console.log(this.allTasks);
-        this.displayAllTasks();
-    }
-
-    displayAllTasks() {
-        const tasksContainer = document.createElement("div");
-        tasksContainer.classList.add("tasks");
-
-        this.allTasks.forEach(task => {
-            tasksContainer.appendChild(task);
-        });
-
-        this.content.appendChild(tasksContainer);
+        tasks.displayAll();
     }
 
     clearContent() {
