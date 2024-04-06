@@ -17,6 +17,19 @@ export default class Tasks {
     getAllTasks() {
         return this.allTasks;
     }
+
+    displayAll() {
+        const content = document.getElementById("content");
+
+        const tasksContainer = document.createElement("div");
+        tasksContainer.classList.add("tasks");
+
+        this.allTasks.forEach(task => {
+            tasksContainer.appendChild(task);
+        });
+
+        content.appendChild(tasksContainer);
+    }
 }
 
 export const tasks = new Tasks();
