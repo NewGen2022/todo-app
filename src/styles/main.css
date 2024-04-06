@@ -110,19 +110,20 @@ button{
     display: flex;
     flex-direction: column;
     border: 2px solid rgb(127, 127, 127);
-    padding: 30px 40px 20px 40px;
+    padding: 20px 15px 20px 15px;
     border-radius: 10px;
 }
 
 input[type="text"]{
     border-radius: 5px;
-    border: 1px solid white;
+    border: none;
     margin-bottom: 5px;
     padding-left: 7px;
     outline: none;
-    color: #232023;
+    color: #d3d3d3;
     font-weight: 500;
     font-size: 16px;
+    background-color: #232023;
 }
 
 input[type="button"]{
@@ -157,6 +158,8 @@ input[type="button"]{
 
 hr{
     width: 100%;
+    border: 1px solid #898989;
+    border-radius: 10px;
 }
 /* SIDEBAR STYLES */
 
