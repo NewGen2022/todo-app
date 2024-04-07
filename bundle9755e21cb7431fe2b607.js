@@ -487,9 +487,10 @@ var Task = /*#__PURE__*/function () {
       var overlay = document.createElement("input");
       overlay.type = "text";
       overlay.disabled = true;
+      overlay.placeholder = "No date";
       overlay.classList.add("overlay");
       overlay.style.position = "absolute";
-      this.handleDate(dateInput, overlay);
+      this.handleDate(overlay);
       var dateContainer = document.createElement("div");
       dateContainer.appendChild(dateInput);
       dateContainer.appendChild(overlay);
@@ -522,9 +523,8 @@ var Task = /*#__PURE__*/function () {
     key: "updateTaskDate",
     value: function updateTaskDate(newDate) {
       this.date = newDate;
-      var dateInput = this.taskElement.querySelector("input.date-input");
       var overlay = this.taskElement.querySelector(".overlay");
-      this.handleDate(dateInput, overlay);
+      this.handleDate(overlay);
     }
   }, {
     key: "handleDate",
@@ -534,15 +534,12 @@ var Task = /*#__PURE__*/function () {
       tomorrow.setDate(tomorrow.getDate() + 1);
       var todayString = today.toISOString().split('T')[0];
       var tomorrowString = tomorrow.toISOString().split('T')[0];
-      if (this.date === "") {
-        overlay.placeholder = "No date";
-      } else if (this.date === todayString) {
+      if (this.date === "") {} else if (this.date === todayString) {
         overlay.placeholder = "Today";
         overlay.classList.remove("overlay-tomorrow", "overlay-anyday");
         overlay.classList.add("overlay-today");
       } else if (this.date === tomorrowString) {
         overlay.placeholder = "Tomorrow";
-        overlay.style.opacity = "1";
         overlay.classList.remove("overlay-today", "overlay-anyday");
         overlay.classList.add("overlay-tomorrow");
       } else {
@@ -1680,4 +1677,4 @@ __webpack_require__.r(__webpack_exports__);
 
 /******/ })()
 ;
-//# sourceMappingURL=bundleb3e4d7de53e0a15d79dc.js.map
+//# sourceMappingURL=bundle9755e21cb7431fe2b607.js.map
