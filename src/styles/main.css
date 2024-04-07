@@ -91,6 +91,9 @@ button{
 #thisWeek::before {
     background-image: url('../assets/bulletin-board.png');
 }
+#done::before {
+    background-image: url('../assets/done.png');
+}
 
 #addProjectBtn{
     background-color: #232023;
@@ -305,6 +308,10 @@ input[type="date"]{
 }
 .overlay-anyday::placeholder{
     color: rgb(0, 221, 255);
+}
+
+.done{
+    text-decoration: line-through;
 }
 
 
