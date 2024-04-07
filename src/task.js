@@ -11,6 +11,9 @@ export default class Task {
         this.taskElement = this.createTaskElement();
         tasks.addTask(this.taskElement);
         this.taskElement.querySelector(".delete").addEventListener("click", this.deleteTaskHandler.bind(this));
+    
+        const dateInput = this.taskElement.querySelector(".date-input");
+        dateInput.addEventListener("change", () => this.updateTaskDate(dateInput.value));
     }
 
     createTaskElement() {
@@ -37,9 +40,26 @@ export default class Task {
         checkboxNameContainer.appendChild(isDoneCheckbox);
         checkboxNameContainer.appendChild(taskName);
 
-        const dateBtn = document.createElement("button");
-        dateBtn.textContent = this.date;
-        dateBtn.classList.add("date");
+        const dateInput = document.createElement("input");
+        dateInput.classList.add("date-input");
+        dateInput.type = "date";
+        dateInput.value = this.date;
+        dateInput.style.zIndex = "2";
+        dateInput.style.opacity = "0";
+        tasks.setMinMaxTime(dateInput);
+        
+        const overlay = document.createElement("input");
+        overlay.type = "text";
+        overlay.disabled = true;
+        overlay.classList.add("overlay");
+        overlay.style.position = "absolute";
+
+        this.handleDate(dateInput, overlay);
+
+        const dateContainer = document.createElement("div");
+        dateContainer.appendChild(dateInput);
+        dateContainer.appendChild(overlay);
+        dateContainer.classList.add("date-container");
 
         const editBtn = document.createElement("button");
         const editIconImg = document.createElement("img");
@@ -60,7 +80,7 @@ export default class Task {
         taskInfo.appendChild(buttons);
         
         taskContainer.appendChild(taskInfo);
-        taskContainer.appendChild(dateBtn);
+        taskContainer.appendChild(dateContainer);
 
         return taskContainer;
     }
@@ -69,5 +89,46 @@ export default class Task {
         tasks.removeTask(this.taskElement);
         this.taskElement.remove();
     }
+
+    updateTaskDate(newDate) {
+        this.date = newDate;
+        const dateInput = this.taskElement.querySelector("input.date-input");
+        const overlay = this.taskElement.querySelector(".overlay");
+
+        this.handleDate(dateInput, overlay);
+    }
+
+    handleDate(overlay){
+        const today = new Date();
+        const tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+    
+        const todayString = today.toISOString().split('T')[0];
+        const tomorrowString = tomorrow.toISOString().split('T')[0];
+    
+        if(this.date === ""){
+            overlay.placeholder = "No date";
+        } else if(this.date === todayString) {
+            overlay.placeholder = "Today";
+            overlay.classList.remove("overlay-tomorrow", "overlay-anyday");
+            overlay.classList.add("overlay-today");
+        } else if(this.date === tomorrowString) {
+            overlay.placeholder = "Tomorrow";
+            overlay.style.opacity = "1";
+            overlay.classList.remove("overlay-today", "overlay-anyday");
+            overlay.classList.add("overlay-tomorrow");
+        } else {
+            const dateObj = new Date(this.date);
+
+            overlay.classList.remove("overlay-today", "overlay-tomorrow");
+            overlay.classList.add("overlay-anyday");
+
+            const options = { day: "numeric", month: "short", year: "numeric" };
+            const formattedDate = dateObj.toLocaleDateString("en-GB", options);
+
+            overlay.placeholder = formattedDate;
+        }
+    }
+    
 }
 export { tasks };
