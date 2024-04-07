@@ -1,10 +1,16 @@
 export default class Tasks {
     constructor() {
         this.allTasks = [];
+        this.doneTasks = [];
     }
 
     addTask(task) {
         this.allTasks.push(task);
+    }
+
+    addDoneTask(doneTask){
+        console.log(doneTask)
+        this.doneTasks.push(doneTask);
     }
 
     removeTask(task) {
@@ -14,8 +20,19 @@ export default class Tasks {
         }
     }
 
+    removeDoneTask(taskElement){
+        const index = this.doneTasks.indexOf(taskElement);
+        if (index !== -1) {
+            this.doneTasks.splice(index, 1);
+    }
+    }
+
     getAllTasks() {
         return this.allTasks;
+    }
+
+    getDoneTasks(){
+        return this.doneTasks;
     }
     
     setMinMaxTime(dateInput){
@@ -58,13 +75,28 @@ export default class Tasks {
         dateInput.max = max;
     }
 
+    displayDone(){
+        const content = document.getElementById("content");
+
+        const doneTasksContainer = document.createElement("div");
+        doneTasksContainer.classList.add("tasks");
+
+        this.doneTasks.forEach(task => {
+            doneTasksContainer.appendChild(task);
+        });
+
+        content.appendChild(doneTasksContainer);
+    }
+
     displayAll() {
         const content = document.getElementById("content");
 
         const tasksContainer = document.createElement("div");
         tasksContainer.classList.add("tasks");
 
-        this.allTasks.forEach(task => {
+        const tasksToDisplay = this.allTasks.filter(task => !task.classList.contains("done"));
+
+        tasksToDisplay.forEach(task => {
             tasksContainer.appendChild(task);
         });
 
