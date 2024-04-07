@@ -43,6 +43,46 @@ var Tasks = /*#__PURE__*/function () {
       return this.allTasks;
     }
   }, {
+    key: "setMinMaxTime",
+    value: function setMinMaxTime(dateInput) {
+      var today = new Date();
+      var year = today.getFullYear();
+      var month = today.getMonth() + 1;
+      var day = today.getDate();
+      if (day > new Date(year, month, 0).getDate()) {
+        month += 1;
+        day -= new Date(year, month - 1, 0).getDate();
+      }
+
+      // Format today's date as YYYY-MM-DD
+      var min = "".concat(year, "-").concat(month < 10 ? '0' + month : month, "-").concat(day < 10 ? '0' + day : day);
+
+      // Calculate the maximum date (365 days from today)
+      var maxYear = year;
+      var maxMonth = month;
+      var maxDay = day + 3650;
+
+      // Check if the calculated day exceeds the number of days in the current month
+      while (maxDay > new Date(maxYear, maxMonth, 0).getDate()) {
+        // If so, adjust the month and day
+        maxDay -= new Date(maxYear, maxMonth, 0).getDate();
+        maxMonth += 1;
+
+        // If the month exceeds 12, increment the year and reset the month to 1
+        if (maxMonth > 12) {
+          maxYear += 1;
+          maxMonth = 1;
+        }
+      }
+
+      // Format the maximum date as YYYY-MM-DD
+      var max = "".concat(maxYear, "-").concat(maxMonth < 10 ? '0' + maxMonth : maxMonth, "-").concat(maxDay < 10 ? '0' + maxDay : maxDay);
+
+      // Set minimum and maximum dates
+      dateInput.min = min;
+      dateInput.max = max;
+    }
+  }, {
     key: "displayAll",
     value: function displayAll() {
       var content = document.getElementById("content");
@@ -255,7 +295,10 @@ var Content = /*#__PURE__*/function () {
       var taskProperties = document.createElement("form");
       taskProperties.classList.add("add-task-form");
       var taskText = document.createElement("input");
-      var date = document.createElement("input");
+      var date = document.createElement("div");
+      var dateInput = document.createElement("input");
+      dateInput.type = "date";
+      dateInput.classList.add("date-input");
       var hr = document.createElement("hr");
       var buttonContainer = document.createElement("div");
       buttonContainer.classList.add("add-cancel");
@@ -266,14 +309,14 @@ var Content = /*#__PURE__*/function () {
       taskText.type = "text";
       taskText.placeholder = "Task name";
       taskText.classList.add("task-text-form");
-      date.type = "text";
-      date.placeholder = "Due Date";
-      date.classList.add("date-form");
+      date.appendChild(dateInput);
+      date.type = "date";
+      date.classList.add("date-input");
       addTaskForm.type = "button";
       addTaskForm.value = "Add task";
       addTaskForm.classList.add("add-task-form-button");
       addTaskForm.addEventListener("click", function () {
-        _this3.displayNewTask(taskText.value, date.value);
+        _this3.displayNewTask(taskText.value, dateInput.value);
         taskProperties.remove();
         _this3.createAddTaskBtn();
       });
@@ -288,6 +331,7 @@ var Content = /*#__PURE__*/function () {
       taskProperties.appendChild(date);
       taskProperties.appendChild(hr);
       taskProperties.appendChild(buttonContainer);
+      _task_js__WEBPACK_IMPORTED_MODULE_0__.tasks.setMinMaxTime(dateInput);
       this.content.appendChild(taskProperties);
     }
   }, {
@@ -402,12 +446,17 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
 
 var Task = /*#__PURE__*/function () {
   function Task(name, date) {
+    var _this = this;
     _classCallCheck(this, Task);
     this.name = name;
     this.date = date;
     this.taskElement = this.createTaskElement();
     _allTasks_js__WEBPACK_IMPORTED_MODULE_2__.tasks.addTask(this.taskElement);
     this.taskElement.querySelector(".delete").addEventListener("click", this.deleteTaskHandler.bind(this));
+    var dateInput = this.taskElement.querySelector(".date-input");
+    dateInput.addEventListener("change", function () {
+      return _this.updateTaskDate(dateInput.value);
+    });
   }
   return _createClass(Task, [{
     key: "createTaskElement",
@@ -428,9 +477,23 @@ var Task = /*#__PURE__*/function () {
       taskName.textContent = this.name;
       checkboxNameContainer.appendChild(isDoneCheckbox);
       checkboxNameContainer.appendChild(taskName);
-      var dateBtn = document.createElement("button");
-      dateBtn.textContent = this.date;
-      dateBtn.classList.add("date");
+      var dateInput = document.createElement("input");
+      dateInput.classList.add("date-input");
+      dateInput.type = "date";
+      dateInput.value = this.date;
+      dateInput.style.zIndex = "2";
+      dateInput.style.opacity = "0";
+      _allTasks_js__WEBPACK_IMPORTED_MODULE_2__.tasks.setMinMaxTime(dateInput);
+      var overlay = document.createElement("input");
+      overlay.type = "text";
+      overlay.disabled = true;
+      overlay.classList.add("overlay");
+      overlay.style.position = "absolute";
+      this.handleDate(dateInput, overlay);
+      var dateContainer = document.createElement("div");
+      dateContainer.appendChild(dateInput);
+      dateContainer.appendChild(overlay);
+      dateContainer.classList.add("date-container");
       var editBtn = document.createElement("button");
       var editIconImg = document.createElement("img");
       editIconImg.src = _assets_edit_text_png__WEBPACK_IMPORTED_MODULE_0__;
@@ -446,7 +509,7 @@ var Task = /*#__PURE__*/function () {
       taskInfo.appendChild(checkboxNameContainer);
       taskInfo.appendChild(buttons);
       taskContainer.appendChild(taskInfo);
-      taskContainer.appendChild(dateBtn);
+      taskContainer.appendChild(dateContainer);
       return taskContainer;
     }
   }, {
@@ -454,6 +517,46 @@ var Task = /*#__PURE__*/function () {
     value: function deleteTaskHandler() {
       _allTasks_js__WEBPACK_IMPORTED_MODULE_2__.tasks.removeTask(this.taskElement);
       this.taskElement.remove();
+    }
+  }, {
+    key: "updateTaskDate",
+    value: function updateTaskDate(newDate) {
+      this.date = newDate;
+      var dateInput = this.taskElement.querySelector("input.date-input");
+      var overlay = this.taskElement.querySelector(".overlay");
+      this.handleDate(dateInput, overlay);
+    }
+  }, {
+    key: "handleDate",
+    value: function handleDate(overlay) {
+      var today = new Date();
+      var tomorrow = new Date(today);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      var todayString = today.toISOString().split('T')[0];
+      var tomorrowString = tomorrow.toISOString().split('T')[0];
+      if (this.date === "") {
+        overlay.placeholder = "No date";
+      } else if (this.date === todayString) {
+        overlay.placeholder = "Today";
+        overlay.classList.remove("overlay-tomorrow", "overlay-anyday");
+        overlay.classList.add("overlay-today");
+      } else if (this.date === tomorrowString) {
+        overlay.placeholder = "Tomorrow";
+        overlay.style.opacity = "1";
+        overlay.classList.remove("overlay-today", "overlay-anyday");
+        overlay.classList.add("overlay-tomorrow");
+      } else {
+        var dateObj = new Date(this.date);
+        overlay.classList.remove("overlay-today", "overlay-tomorrow");
+        overlay.classList.add("overlay-anyday");
+        var options = {
+          day: "numeric",
+          month: "short",
+          year: "numeric"
+        };
+        var formattedDate = dateObj.toLocaleDateString("en-GB", options);
+        overlay.placeholder = formattedDate;
+      }
     }
   }]);
 }();
@@ -755,6 +858,52 @@ input[type="checkbox"]:active, input[type="checkbox"]:focus{
     transform: scale(1.05);
 }
 
+input[type="date"]{
+    background: none;
+    border: 2px solid #747474;
+    border-radius: 5px;
+    margin-top: 5px;
+    padding: 5px 15px;
+    cursor: pointer;
+}
+
+.date-container{
+    display: flex;
+    align-items: center;
+    color: #bfbfbf;
+    cursor: pointer;
+}
+
+.date-input{
+    display: flex;
+    color: #bfbfbf;
+    cursor: pointer;
+}
+
+::-webkit-calendar-picker-indicator { 
+    background: transparent;
+    width: 105px;
+    height: 50px;
+    position: absolute;
+    margin-left: -15px;
+    cursor: pointer;
+}
+
+.overlay-today::placeholder, .overlay-tomorrow::placeholder, .overlay-anyday::placeholder{
+    font-size: 14px;
+}
+
+.overlay-today::placeholder{
+    color: rgb(0, 255, 0);
+}
+.overlay-tomorrow::placeholder{
+    color: orange;
+}
+.overlay-anyday::placeholder{
+    color: rgb(0, 221, 255);
+}
+
+
 .buttons{
     display: flex;
     gap: 5px;
@@ -768,9 +917,9 @@ input[type="checkbox"]:active, input[type="checkbox"]:focus{
 
 .date{
     background: none;
-    border: 2px solid #747474;
-    border-radius: 5px;
-    width: 100px;
+    border: none;
+    border-radius: 10px;
+    width: 110px;
     outline: none;
     margin-top: 5px;
 }
@@ -810,7 +959,7 @@ input[type="checkbox"]:active, input[type="checkbox"]:focus{
     box-shadow: 0 0 5px rgb(9, 183, 0);
     transform: scale(1.1);
 }
-/* FOOTER STYLES */`, "",{"version":3,"sources":["webpack://./src/styles/main.css"],"names":[],"mappings":"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","sourcesContent":["@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');\r\n\r\n*{\r\n    box-sizing: border-box;\r\n    font-family: \"Poppins\", sans-serif;\r\n    color: #d5d5d5;\r\n}\r\n\r\nbody{\r\n    margin: 0;\r\n    padding: 0;\r\n    background-color: #232023;\r\n    display: flex;\r\n    flex-direction: column;\r\n    height: 100vh;\r\n}\r\n\r\nbutton{\r\n    cursor: pointer;\r\n}\r\n\r\n#logoImg{\r\n    width: 110px;\r\n    border-radius: 100px;\r\n    margin-left: 2vw;\r\n}\r\n\r\n#header{\r\n    display: flex;\r\n    align-items: center;\r\n    font-size: clamp(28px, 5vw, 38px);\r\n    font-weight: 700;\r\n    background-color: #5a5a5a;\r\n    gap: 10px;\r\n}\r\n\r\n#main{\r\n    display: flex;\r\n    flex-grow: 1;\r\n    background-color: #232023;\r\n}\r\n\r\n\r\n/* SIDEBAR STYLES */\r\n#sidebar{\r\n    display: flex;\r\n    flex-direction: column;\r\n    background-color: #2f2d2f;\r\n    padding: 30px;\r\n    width: clamp(220px, 30vw, 300px);\r\n}\r\n\r\n.buttonDays, #addProjectBtn{\r\n    display: flex;\r\n    align-items: center;\r\n    border: none;\r\n    background: none;\r\n    color: #dddddd;\r\n    padding: 10px 20px;\r\n    font-size: clamp(14px, 2vw, 16px);\r\n    font-weight: 700;\r\n    border-radius: 10px;\r\n    margin-bottom: 10px;\r\n    gap: 10px;\r\n}\r\n.buttonDays:hover{\r\n    transform: scale(1.05);\r\n    background-color: #444444;\r\n}\r\n.buttonDays:active{\r\n    transform: scale(0.99);\r\n}\r\n.buttonDays:focus{\r\n    background-color: #444444;\r\n}\r\n\r\n.with-icon::before {\r\n    content: '';\r\n    display: inline-block;\r\n    width: 30px;\r\n    height: 30px;\r\n    background-repeat: no-repeat;\r\n    background-size: contain;\r\n}\r\n#inbox::before {\r\n    background-image: url('../assets/all.png');\r\n}\r\n#today::before {\r\n    background-image: url('../assets/availability.png');\r\n}\r\n#thisWeek::before {\r\n    background-image: url('../assets/bulletin-board.png');\r\n}\r\n\r\n#addProjectBtn{\r\n    background-color: #232023;\r\n    margin: 0 10px;\r\n    font-size: clamp(12px, 2vw, 14px);\r\n}\r\n#addProjectBtn:hover{\r\n    background-color: #545454;\r\n}\r\n#addProjectBtn::before{\r\n    width: 15px;\r\n    height: 15px;\r\n    background-image: url('../assets/plus-symbol-button.png');\r\n}\r\n\r\n.add-task-form{\r\n    display: flex;\r\n    flex-direction: column;\r\n    border: 2px solid rgb(127, 127, 127);\r\n    padding: 20px 15px 20px 15px;\r\n    border-radius: 10px;\r\n}\r\n\r\ninput[type=\"text\"]{\r\n    border-radius: 5px;\r\n    border: none;\r\n    margin-bottom: 5px;\r\n    padding-left: 7px;\r\n    outline: none;\r\n    color: #d3d3d3;\r\n    font-weight: 500;\r\n    font-size: 16px;\r\n    background-color: #232023;\r\n}\r\n\r\ninput[type=\"button\"]{\r\n    border-radius: 5px;\r\n    background-color: #2f2d2f;\r\n    font-weight: 600;\r\n    font-size: 12px;\r\n    padding: 5px 15px;\r\n    cursor: pointer;\r\n}\r\n\r\n.add-cancel{\r\n    display: flex;\r\n    justify-content: end;\r\n    gap: 5px;\r\n}\r\n\r\n.add-task-form-button{\r\n    border: 1px solid #2ee700;\r\n}\r\n.add-task-form-button:hover{\r\n    color: #000000;\r\n    background-color: #2ee700;\r\n}\r\n\r\n.cancel-form-button{\r\n    border: 1px solid #dd2500;\r\n}\r\n.cancel-form-button:hover{\r\n    background-color: #dd2500;\r\n}\r\n\r\nhr{\r\n    width: 100%;\r\n    border: 1px solid #898989;\r\n    border-radius: 10px;\r\n}\r\n/* SIDEBAR STYLES */\r\n\r\n\r\n/* CONTENT STYLES */\r\n#content{\r\n    display: flex;\r\n    flex-direction: column;\r\n    flex: 1;\r\n    padding: 50px clamp(50px, 12vw, 200px);\r\n}\r\n\r\n.headerDay{\r\n    font-size: 32px;\r\n    font-weight: 600;\r\n    margin-bottom: 20px;\r\n}\r\n\r\n.addTaskBtn{\r\n    border: 2px solid rgb(111, 111, 111);\r\n    background: none;\r\n    font-size: 16px;\r\n    background-color: #2f2d2f;\r\n    border-radius: 10px;\r\n    padding: 8px 20px;\r\n    outline: none;\r\n    margin-top: 10px;\r\n}\r\n.addTaskBtn:hover{\r\n    border: 2px solid rgb(173, 173, 173);\r\n    background-color: #696769;\r\n    transform: scale(1.01);\r\n}\r\n.addTaskBtn:active{\r\n    transform: scale(1);\r\n}\r\n\r\n.tasks{\r\n    display: flex;\r\n    flex-direction: column;\r\n}\r\n\r\n.task{\r\n    display: flex;\r\n    flex-direction: column;\r\n    margin-bottom: 15px;\r\n    cursor: pointer;\r\n    font-size: 18px;\r\n    justify-content: center;\r\n}\r\n\r\n.task-info{\r\n    display: flex;\r\n    align-items: center;\r\n    justify-content: space-between;\r\n}\r\n\r\n.checkbox-name-container{\r\n    display: flex;\r\n    gap: 10px;\r\n}\r\n\r\n\r\ninput[type=\"checkbox\"] {\r\n  appearance: none;\r\n  background: #eaeaea;\r\n  outline: none;\r\n  border: none;\r\n  height: 1.75em;\r\n  width: 1.75em;\r\n  border-radius: 100%;\r\n  vertical-align: text-bottom;\r\n  position: relative;\r\n  cursor: pointer;\r\n  transition: transform 0.5s ease;\r\n}\r\ninput[type=\"checkbox\"] {\r\n  border-radius: 10px;\r\n}\r\ninput[type=\"checkbox\"]::before {\r\n  content: \"\";\r\n  position: absolute;\r\n  margin: auto;\r\n  left: 0;\r\n  right: 0;\r\n  bottom: 0;\r\n  top: 0;\r\n  overflow: hidden;\r\n}\r\ninput[type=\"checkbox\"]:checked::before {\r\n  border-right: 5px solid #2ee700;\r\n  border-bottom: 6px solid #33ff00;\r\n  height: 90%;\r\n  width: 30%;\r\n  transform: rotate(50deg) translateY(-20%) translateX(-10%);\r\n}\r\ninput[type=\"checkbox\"]:active, input[type=\"checkbox\"]:focus{\r\n    background-color: #fff;\r\n    border: 2px solid #fff;\r\n    transform: scale(1.05);\r\n}\r\n\r\n.buttons{\r\n    display: flex;\r\n    gap: 5px;\r\n    align-items: center;\r\n    justify-content: center;\r\n}\r\n.buttons img{\r\n    width: 25px;\r\n    height: 25px;\r\n}\r\n\r\n.date{\r\n    background: none;\r\n    border: 2px solid #747474;\r\n    border-radius: 5px;\r\n    width: 100px;\r\n    outline: none;\r\n    margin-top: 5px;\r\n}\r\n\r\n.edit, .delete{\r\n    background: none;\r\n    border: none;\r\n}\r\n\r\n.edit:hover, .delete:hover{\r\n    transform: scale(1.07);\r\n}\r\n\r\n.edit:active, .delete:active{\r\n    transform: scale(0.95);\r\n}\r\n/* CONTENT STYLES */\r\n\r\n\r\n/* FOOTER STYLES */\r\n#footer{\r\n    display: flex;\r\n    justify-content: center;\r\n    align-items: center;\r\n    gap: 5px;\r\n    font-weight: 600;\r\n    background-color: #5a5a5a;\r\n    font-size: clamp(14px, 1vw, 18px);\r\n    padding: 10px;\r\n}\r\n#footer img{\r\n    width: 25px;\r\n    height: 25px;\r\n    border-radius: 40px;\r\n}\r\n#footer img:hover{\r\n    box-shadow: 0 0 5px rgb(9, 183, 0);\r\n    transform: scale(1.1);\r\n}\r\n/* FOOTER STYLES */"],"sourceRoot":""}]);
+/* FOOTER STYLES */`, "",{"version":3,"sources":["webpack://./src/styles/main.css"],"names":[],"mappings":"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","sourcesContent":["@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');\r\n\r\n*{\r\n    box-sizing: border-box;\r\n    font-family: \"Poppins\", sans-serif;\r\n    color: #d5d5d5;\r\n}\r\n\r\nbody{\r\n    margin: 0;\r\n    padding: 0;\r\n    background-color: #232023;\r\n    display: flex;\r\n    flex-direction: column;\r\n    height: 100vh;\r\n}\r\n\r\nbutton{\r\n    cursor: pointer;\r\n}\r\n\r\n#logoImg{\r\n    width: 110px;\r\n    border-radius: 100px;\r\n    margin-left: 2vw;\r\n}\r\n\r\n#header{\r\n    display: flex;\r\n    align-items: center;\r\n    font-size: clamp(28px, 5vw, 38px);\r\n    font-weight: 700;\r\n    background-color: #5a5a5a;\r\n    gap: 10px;\r\n}\r\n\r\n#main{\r\n    display: flex;\r\n    flex-grow: 1;\r\n    background-color: #232023;\r\n}\r\n\r\n\r\n/* SIDEBAR STYLES */\r\n#sidebar{\r\n    display: flex;\r\n    flex-direction: column;\r\n    background-color: #2f2d2f;\r\n    padding: 30px;\r\n    width: clamp(220px, 30vw, 300px);\r\n}\r\n\r\n.buttonDays, #addProjectBtn{\r\n    display: flex;\r\n    align-items: center;\r\n    border: none;\r\n    background: none;\r\n    color: #dddddd;\r\n    padding: 10px 20px;\r\n    font-size: clamp(14px, 2vw, 16px);\r\n    font-weight: 700;\r\n    border-radius: 10px;\r\n    margin-bottom: 10px;\r\n    gap: 10px;\r\n}\r\n.buttonDays:hover{\r\n    transform: scale(1.05);\r\n    background-color: #444444;\r\n}\r\n.buttonDays:active{\r\n    transform: scale(0.99);\r\n}\r\n.buttonDays:focus{\r\n    background-color: #444444;\r\n}\r\n\r\n.with-icon::before {\r\n    content: '';\r\n    display: inline-block;\r\n    width: 30px;\r\n    height: 30px;\r\n    background-repeat: no-repeat;\r\n    background-size: contain;\r\n}\r\n#inbox::before {\r\n    background-image: url('../assets/all.png');\r\n}\r\n#today::before {\r\n    background-image: url('../assets/availability.png');\r\n}\r\n#thisWeek::before {\r\n    background-image: url('../assets/bulletin-board.png');\r\n}\r\n\r\n#addProjectBtn{\r\n    background-color: #232023;\r\n    margin: 0 10px;\r\n    font-size: clamp(12px, 2vw, 14px);\r\n}\r\n#addProjectBtn:hover{\r\n    background-color: #545454;\r\n}\r\n#addProjectBtn::before{\r\n    width: 15px;\r\n    height: 15px;\r\n    background-image: url('../assets/plus-symbol-button.png');\r\n}\r\n\r\n.add-task-form{\r\n    display: flex;\r\n    flex-direction: column;\r\n    border: 2px solid rgb(127, 127, 127);\r\n    padding: 20px 15px 20px 15px;\r\n    border-radius: 10px;\r\n}\r\n\r\ninput[type=\"text\"]{\r\n    border-radius: 5px;\r\n    border: none;\r\n    margin-bottom: 5px;\r\n    padding-left: 7px;\r\n    outline: none;\r\n    color: #d3d3d3;\r\n    font-weight: 500;\r\n    font-size: 16px;\r\n    background-color: #232023;\r\n}\r\n\r\ninput[type=\"button\"]{\r\n    border-radius: 5px;\r\n    background-color: #2f2d2f;\r\n    font-weight: 600;\r\n    font-size: 12px;\r\n    padding: 5px 15px;\r\n    cursor: pointer;\r\n}\r\n\r\n.add-cancel{\r\n    display: flex;\r\n    justify-content: end;\r\n    gap: 5px;\r\n}\r\n\r\n.add-task-form-button{\r\n    border: 1px solid #2ee700;\r\n}\r\n.add-task-form-button:hover{\r\n    color: #000000;\r\n    background-color: #2ee700;\r\n}\r\n\r\n.cancel-form-button{\r\n    border: 1px solid #dd2500;\r\n}\r\n.cancel-form-button:hover{\r\n    background-color: #dd2500;\r\n}\r\n\r\nhr{\r\n    width: 100%;\r\n    border: 1px solid #898989;\r\n    border-radius: 10px;\r\n}\r\n/* SIDEBAR STYLES */\r\n\r\n\r\n/* CONTENT STYLES */\r\n#content{\r\n    display: flex;\r\n    flex-direction: column;\r\n    flex: 1;\r\n    padding: 50px clamp(50px, 12vw, 200px);\r\n}\r\n\r\n.headerDay{\r\n    font-size: 32px;\r\n    font-weight: 600;\r\n    margin-bottom: 20px;\r\n}\r\n\r\n.addTaskBtn{\r\n    border: 2px solid rgb(111, 111, 111);\r\n    background: none;\r\n    font-size: 16px;\r\n    background-color: #2f2d2f;\r\n    border-radius: 10px;\r\n    padding: 8px 20px;\r\n    outline: none;\r\n    margin-top: 10px;\r\n}\r\n.addTaskBtn:hover{\r\n    border: 2px solid rgb(173, 173, 173);\r\n    background-color: #696769;\r\n    transform: scale(1.01);\r\n}\r\n.addTaskBtn:active{\r\n    transform: scale(1);\r\n}\r\n\r\n.tasks{\r\n    display: flex;\r\n    flex-direction: column;\r\n}\r\n\r\n.task{\r\n    display: flex;\r\n    flex-direction: column;\r\n    margin-bottom: 15px;\r\n    cursor: pointer;\r\n    font-size: 18px;\r\n    justify-content: center;\r\n}\r\n\r\n.task-info{\r\n    display: flex;\r\n    align-items: center;\r\n    justify-content: space-between;\r\n}\r\n\r\n.checkbox-name-container{\r\n    display: flex;\r\n    gap: 10px;\r\n}\r\n\r\n\r\ninput[type=\"checkbox\"] {\r\n  appearance: none;\r\n  background: #eaeaea;\r\n  outline: none;\r\n  border: none;\r\n  height: 1.75em;\r\n  width: 1.75em;\r\n  border-radius: 100%;\r\n  vertical-align: text-bottom;\r\n  position: relative;\r\n  cursor: pointer;\r\n  transition: transform 0.5s ease;\r\n}\r\ninput[type=\"checkbox\"] {\r\n  border-radius: 10px;\r\n}\r\ninput[type=\"checkbox\"]::before {\r\n  content: \"\";\r\n  position: absolute;\r\n  margin: auto;\r\n  left: 0;\r\n  right: 0;\r\n  bottom: 0;\r\n  top: 0;\r\n  overflow: hidden;\r\n}\r\ninput[type=\"checkbox\"]:checked::before {\r\n  border-right: 5px solid #2ee700;\r\n  border-bottom: 6px solid #33ff00;\r\n  height: 90%;\r\n  width: 30%;\r\n  transform: rotate(50deg) translateY(-20%) translateX(-10%);\r\n}\r\ninput[type=\"checkbox\"]:active, input[type=\"checkbox\"]:focus{\r\n    background-color: #fff;\r\n    border: 2px solid #fff;\r\n    transform: scale(1.05);\r\n}\r\n\r\ninput[type=\"date\"]{\r\n    background: none;\r\n    border: 2px solid #747474;\r\n    border-radius: 5px;\r\n    margin-top: 5px;\r\n    padding: 5px 15px;\r\n    cursor: pointer;\r\n}\r\n\r\n.date-container{\r\n    display: flex;\r\n    align-items: center;\r\n    color: #bfbfbf;\r\n    cursor: pointer;\r\n}\r\n\r\n.date-input{\r\n    display: flex;\r\n    color: #bfbfbf;\r\n    cursor: pointer;\r\n}\r\n\r\n::-webkit-calendar-picker-indicator { \r\n    background: transparent;\r\n    width: 105px;\r\n    height: 50px;\r\n    position: absolute;\r\n    margin-left: -15px;\r\n    cursor: pointer;\r\n}\r\n\r\n.overlay-today::placeholder, .overlay-tomorrow::placeholder, .overlay-anyday::placeholder{\r\n    font-size: 14px;\r\n}\r\n\r\n.overlay-today::placeholder{\r\n    color: rgb(0, 255, 0);\r\n}\r\n.overlay-tomorrow::placeholder{\r\n    color: orange;\r\n}\r\n.overlay-anyday::placeholder{\r\n    color: rgb(0, 221, 255);\r\n}\r\n\r\n\r\n.buttons{\r\n    display: flex;\r\n    gap: 5px;\r\n    align-items: center;\r\n    justify-content: center;\r\n}\r\n.buttons img{\r\n    width: 25px;\r\n    height: 25px;\r\n}\r\n\r\n.date{\r\n    background: none;\r\n    border: none;\r\n    border-radius: 10px;\r\n    width: 110px;\r\n    outline: none;\r\n    margin-top: 5px;\r\n}\r\n\r\n.edit, .delete{\r\n    background: none;\r\n    border: none;\r\n}\r\n\r\n.edit:hover, .delete:hover{\r\n    transform: scale(1.07);\r\n}\r\n\r\n.edit:active, .delete:active{\r\n    transform: scale(0.95);\r\n}\r\n/* CONTENT STYLES */\r\n\r\n\r\n/* FOOTER STYLES */\r\n#footer{\r\n    display: flex;\r\n    justify-content: center;\r\n    align-items: center;\r\n    gap: 5px;\r\n    font-weight: 600;\r\n    background-color: #5a5a5a;\r\n    font-size: clamp(14px, 1vw, 18px);\r\n    padding: 10px;\r\n}\r\n#footer img{\r\n    width: 25px;\r\n    height: 25px;\r\n    border-radius: 40px;\r\n}\r\n#footer img:hover{\r\n    box-shadow: 0 0 5px rgb(9, 183, 0);\r\n    transform: scale(1.1);\r\n}\r\n/* FOOTER STYLES */"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -1531,4 +1680,4 @@ __webpack_require__.r(__webpack_exports__);
 
 /******/ })()
 ;
-//# sourceMappingURL=bundle94b2cd195ff0ac7f07a8.js.map
+//# sourceMappingURL=bundleb3e4d7de53e0a15d79dc.js.map
