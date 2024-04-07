@@ -32,6 +32,16 @@ export default class Task {
         isDoneCheckbox.classList.add("custom-checkbox");
         isDoneCheckbox.type = "checkbox";
 
+        isDoneCheckbox.addEventListener("change", () => {
+            if (isDoneCheckbox.checked) {
+                this.taskElement.classList.add("done");
+                tasks.addDoneTask(this.taskElement);
+            } else {
+                this.taskElement.classList.remove("done");
+                tasks.removeDoneTask(this.taskElement);
+            }
+        });
+        
         const taskName = document.createElement("div");
         taskName.classList.add("task-name");
         taskName.textContent = this.name;
