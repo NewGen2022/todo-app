@@ -7,6 +7,7 @@ export default class Content {
         this.content.setAttribute("id", "content");
         this.main.appendChild(this.content);
         this.allTasks = tasks.getAllTasks();
+        this.activeTab = null;
         this.sidebarEventListeners();
     }
 
@@ -15,30 +16,63 @@ export default class Content {
         const todayBtn = document.getElementById("today");
         const thisWeekBtn = document.getElementById("thisWeek");
         const addProjectBtn = document.getElementById("addProjectBtn");
+        const doneBtn = document.getElementById("done");
 
-        inboxBtn.addEventListener("click", () => this.inboxTasks());
-        todayBtn.addEventListener("click", () => this.todayTasks());
-        thisWeekBtn.addEventListener("click", () => this.thisWeekTasks());
+        inboxBtn.addEventListener("click", () => this.tabClicked(inboxBtn));
+        todayBtn.addEventListener("click", () => this.tabClicked(todayBtn));
+        thisWeekBtn.addEventListener("click", () => this.tabClicked(thisWeekBtn));
+        doneBtn.addEventListener("click", () => this.tabClicked(doneBtn));
         addProjectBtn.addEventListener("click", () => this.createAddProjectBtn());
+
+        // Set the default active tab
+        this.tabClicked(inboxBtn);
     }
 
-    inboxTasks() {
+    tabClicked(tabButton) {
+        const allTabs = document.querySelectorAll(".tab");
+        allTabs.forEach(tab => tab.classList.remove("active-tab"));
+    
+        tabButton.classList.add("active-tab");
+    
+        this.activeTab = tabButton.id;
         this.clearContent();
+        switch (this.activeTab) {
+            case "inbox":
+                this.inboxTasks();
+                break;
+            case "today":
+                this.todayTasks();
+                break;
+            case "thisWeek":
+                this.thisWeekTasks();
+                break;
+            case "done":
+                this.doneTasks();
+                break;
+            default:
+                break;
+        }
+    }
+    
+    inboxTasks() {
         this.createHeaderDay("Inbox");
         tasks.displayAll();
         this.createAddTaskBtn();
     }
 
     todayTasks() {
-        this.clearContent();
         this.createHeaderDay("Today");
         this.createAddTaskBtn();
     }
 
     thisWeekTasks() {
-        this.clearContent();
         this.createHeaderDay("This week");
         this.createAddTaskBtn();
+    }
+
+    doneTasks(){
+        this.createHeaderDay("Done");
+        tasks.displayDone();
     }
 
     createAddProjectBtn() {
@@ -75,7 +109,11 @@ export default class Content {
         taskProperties.classList.add("add-task-form");
 
         const taskText = document.createElement("input");
-        const date = document.createElement("input");
+        const date = document.createElement("div");
+
+        const dateInput = document.createElement("input");
+        dateInput.type = "date";
+        dateInput.classList.add("date-input");
 
         const hr = document.createElement("hr");
 
@@ -92,15 +130,16 @@ export default class Content {
         taskText.placeholder = "Task name";
         taskText.classList.add("task-text-form");
 
-        date.type = "text";
-        date.placeholder = "Due Date";
-        date.classList.add("date-form");
+        date.appendChild(dateInput);
+
+        date.type = "date";
+        date.classList.add("date-input");
 
         addTaskForm.type = "button";
         addTaskForm.value = "Add task";
         addTaskForm.classList.add("add-task-form-button");
         addTaskForm.addEventListener("click", () => {
-            this.displayNewTask(taskText.value, date.value);
+            this.displayNewTask(taskText.value, dateInput.value);
             taskProperties.remove();
             this.createAddTaskBtn()
         });
@@ -118,6 +157,8 @@ export default class Content {
         taskProperties.appendChild(hr);
         taskProperties.appendChild(buttonContainer);
 
+        tasks.setMinMaxTime(dateInput);
+
         this.content.appendChild(taskProperties);
     }
 
@@ -125,6 +166,7 @@ export default class Content {
         if(taskText){
             const newTask = new Task(taskText, date);
         }
+        
         tasks.displayAll();
     }
 
