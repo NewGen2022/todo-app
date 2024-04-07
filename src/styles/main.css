@@ -262,6 +262,52 @@ input[type="checkbox"]:active, input[type="checkbox"]:focus{
     transform: scale(1.05);
 }
 
+input[type="date"]{
+    background: none;
+    border: 2px solid #747474;
+    border-radius: 5px;
+    margin-top: 5px;
+    padding: 5px 15px;
+    cursor: pointer;
+}
+
+.date-container{
+    display: flex;
+    align-items: center;
+    color: #bfbfbf;
+    cursor: pointer;
+}
+
+.date-input{
+    display: flex;
+    color: #bfbfbf;
+    cursor: pointer;
+}
+
+::-webkit-calendar-picker-indicator { 
+    background: transparent;
+    width: 105px;
+    height: 50px;
+    position: absolute;
+    margin-left: -15px;
+    cursor: pointer;
+}
+
+.overlay-today::placeholder, .overlay-tomorrow::placeholder, .overlay-anyday::placeholder{
+    font-size: 14px;
+}
+
+.overlay-today::placeholder{
+    color: rgb(0, 255, 0);
+}
+.overlay-tomorrow::placeholder{
+    color: orange;
+}
+.overlay-anyday::placeholder{
+    color: rgb(0, 221, 255);
+}
+
+
 .buttons{
     display: flex;
     gap: 5px;
@@ -275,9 +321,9 @@ input[type="checkbox"]:active, input[type="checkbox"]:focus{
 
 .date{
     background: none;
-    border: 2px solid #747474;
-    border-radius: 5px;
-    width: 100px;
+    border: none;
+    border-radius: 10px;
+    width: 110px;
     outline: none;
     margin-top: 5px;
 }
