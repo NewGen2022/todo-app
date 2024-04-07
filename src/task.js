@@ -3,7 +3,6 @@ import deleteIcon from "./assets/delete.png";
 import { tasks } from "./allTasks.js";
 
 
-
 export default class Task {
     constructor(name, date) {
         this.name = name;
@@ -51,10 +50,11 @@ export default class Task {
         const overlay = document.createElement("input");
         overlay.type = "text";
         overlay.disabled = true;
+        overlay.placeholder = "No date";
         overlay.classList.add("overlay");
         overlay.style.position = "absolute";
 
-        this.handleDate(dateInput, overlay);
+        this.handleDate(overlay);
 
         const dateContainer = document.createElement("div");
         dateContainer.appendChild(dateInput);
@@ -92,10 +92,9 @@ export default class Task {
 
     updateTaskDate(newDate) {
         this.date = newDate;
-        const dateInput = this.taskElement.querySelector("input.date-input");
         const overlay = this.taskElement.querySelector(".overlay");
 
-        this.handleDate(dateInput, overlay);
+        this.handleDate(overlay);
     }
 
     handleDate(overlay){
@@ -107,14 +106,13 @@ export default class Task {
         const tomorrowString = tomorrow.toISOString().split('T')[0];
     
         if(this.date === ""){
-            overlay.placeholder = "No date";
+
         } else if(this.date === todayString) {
             overlay.placeholder = "Today";
             overlay.classList.remove("overlay-tomorrow", "overlay-anyday");
             overlay.classList.add("overlay-today");
         } else if(this.date === tomorrowString) {
             overlay.placeholder = "Tomorrow";
-            overlay.style.opacity = "1";
             overlay.classList.remove("overlay-today", "overlay-anyday");
             overlay.classList.add("overlay-tomorrow");
         } else {
