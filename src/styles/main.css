@@ -301,13 +301,13 @@ input[type="date"]{
 }
 
 .overlay-today::placeholder{
-    color: rgb(0, 255, 0);
+    color: #00ff00;
 }
 .overlay-tomorrow::placeholder{
-    color: orange;
+    color: #ffa500;
 }
 .overlay-anyday::placeholder{
-    color: rgb(0, 221, 255);
+    color: #00ddff;
 }
 
 .done{
@@ -346,6 +346,30 @@ input[type="date"]{
 
 .edit:active, .delete:active{
     transform: scale(0.95);
+}
+
+.no-done-tasks, .no-tasks{
+    display: flex;
+    justify-content: center;
+    align-items: end;
+    font-size: 24px;
+    font-weight: 900;
+    color: rgb(255, 238, 0);
+}
+.no-done-tasks::after{
+    background-image: url('../assets/sad.png');
+}
+.no-done-tasks img, .no-tasks img{
+    margin-left: 10px;
+    width: 40px;
+    height: 40px;
+}
+
+.no-tasks{
+    color: #00c3ff;
+}
+.no-tasks::after{
+    background-image: url('../assets/party-popper.png');
 }
 /* CONTENT STYLES */
 
