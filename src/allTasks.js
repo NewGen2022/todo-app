@@ -88,6 +88,29 @@ export default class Tasks {
         content.appendChild(doneTasksContainer);
     }
 
+    displayTodayTasks(){
+        const content = document.getElementById("content");
+
+        const tasksContainer = document.createElement("div");
+        tasksContainer.classList.add("tasks");
+
+        const today = new Date();
+        const todayDateString = today.toISOString().split('T')[0];
+
+        // Filter tasks with today's date
+        const tasksToDisplay = this.allTasks.filter(task => {
+            const taskDate = task.querySelector(".date-input").value;
+            const isUnchecked = !task.querySelector(".custom-checkbox").checked;
+            return taskDate === todayDateString && isUnchecked;
+        });
+        
+        tasksToDisplay.forEach(task => {
+            tasksContainer.appendChild(task);
+        });
+
+        content.appendChild(tasksContainer);
+    }
+
     displayAll() {
         const content = document.getElementById("content");
 
