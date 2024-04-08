@@ -141,7 +141,13 @@ export default class Content {
         addTaskForm.value = "Add task";
         addTaskForm.classList.add("add-task-form-button");
         addTaskForm.addEventListener("click", () => {
-            this.displayNewTask(taskText.value, dateInput.value);
+            this.addNewTask(taskText.value, dateInput.value);
+            const activeTab = document.querySelector(".active-tab");
+            if (activeTab.classList.contains("active-tab") && activeTab.id === "today"){
+                tasks.displayTodayTasks();
+            } else if(activeTab.classList.contains("active-tab") && activeTab.id === "inbox"){
+                tasks.displayAll();
+            }
             taskProperties.remove();
             this.createAddTaskBtn()
         });
@@ -164,12 +170,11 @@ export default class Content {
         this.content.appendChild(taskProperties);
     }
 
-    displayNewTask(taskText, date=None){
+    addNewTask(taskText, date=None){
         if(taskText){
             const newTask = new Task(taskText, date);
+            return newTask;
         }
-        
-        tasks.displayAll();
     }
 
     clearContent() {
