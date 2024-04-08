@@ -102,11 +102,16 @@ export default class Content {
     }
 
     displayTaskForm(){
+        // delete button for adding tasks when form for adding task is displayed
         const addTaskBtn = this.content.querySelector('.addTaskBtn');
         if (addTaskBtn) {
             addTaskBtn.remove();
         }
 
+        this.createTaskForm();
+    }
+
+    createTaskForm(){
         const taskProperties = document.createElement("form");
         taskProperties.classList.add("add-task-form");
 
