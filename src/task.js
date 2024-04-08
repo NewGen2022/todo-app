@@ -40,6 +40,10 @@ export default class Task {
                 this.taskElement.classList.remove("done");
                 tasks.removeDoneTask(this.taskElement);
             }
+
+            setTimeout(() => {
+                this.taskElement.remove();
+            }, 400);
         });
         
         const taskName = document.createElement("div");
