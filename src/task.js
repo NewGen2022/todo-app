@@ -15,53 +15,94 @@ export default class Task {
         dateInput.addEventListener("change", () => this.updateTaskDate(dateInput.value));
     }
 
+// methods needed to create task
     createTaskElement() {
+        const taskContainer = this.createTaskContainer();
+        const taskInfo = this.createTaskInfo();
+        const buttons = this.createButtons();
+        const checkboxNameContainer = this.createCheckboxNameContainer();
+        const isDoneCheckbox = this.createIsDoneCheckbox();
+        const taskName = this.createTaskName();
+        const dateContainer = this.createDateContainer();
+        const editBtn = this.createEditButton();
+        const deleteBtn = this.createDeleteButton();
+        const overlay = this.createOverlay();
+    
+        // Append elements to their respective containers
+        checkboxNameContainer.appendChild(isDoneCheckbox);
+        checkboxNameContainer.appendChild(taskName);
+        buttons.appendChild(editBtn);
+        buttons.appendChild(deleteBtn);
+        taskInfo.appendChild(checkboxNameContainer);
+        taskInfo.appendChild(buttons);
+        dateContainer.appendChild(this.createDateInput());
+        dateContainer.appendChild(overlay);
+        taskContainer.appendChild(taskInfo);
+        taskContainer.appendChild(dateContainer);
+    
+        return taskContainer;
+    }
+    
+    createTaskContainer() {
         const taskContainer = document.createElement("div");
         taskContainer.classList.add("task");
-
+        return taskContainer;
+    }
+    
+    createTaskInfo() {
         const taskInfo = document.createElement("div");
         taskInfo.classList.add("task-info");
-
+        return taskInfo;
+    }
+    
+    createButtons() {
         const buttons = document.createElement("div");
         buttons.classList.add("buttons");
-
+        return buttons;
+    }
+    
+    createCheckboxNameContainer() {
         const checkboxNameContainer = document.createElement("div");
         checkboxNameContainer.classList.add("checkbox-name-container");
-
+        return checkboxNameContainer;
+    }
+    
+    createIsDoneCheckbox() {
         const isDoneCheckbox = document.createElement("input");
         isDoneCheckbox.classList.add("custom-checkbox");
         isDoneCheckbox.type = "checkbox";
+        isDoneCheckbox.addEventListener("change", () => this.handleIsDoneChange(isDoneCheckbox));
+        return isDoneCheckbox;
+    }
 
-        isDoneCheckbox.addEventListener("change", () => {
-            if (isDoneCheckbox.checked) {
-                this.taskElement.classList.add("done");
-                tasks.addDoneTask(this.taskElement);
-            } else {
-                this.taskElement.classList.remove("done");
-                tasks.removeDoneTask(this.taskElement);
-            }
+    handleIsDoneChange(isDoneCheckbox){
+        if (isDoneCheckbox.checked) {
+            this.taskElement.classList.add("done");
+            tasks.addDoneTask(this.taskElement);
+        } else {
+            this.taskElement.classList.remove("done");
+            tasks.removeDoneTask(this.taskElement);
+        }
 
-            setTimeout(() => {
-                this.taskElement.remove();
-            }, 400);
-        });
-        
+        setTimeout(() => {
+            this.taskElement.remove();
+        }, 400);
+    }
+    
+    createTaskName() {
         const taskName = document.createElement("div");
         taskName.classList.add("task-name");
         taskName.textContent = this.name;
-        
-        checkboxNameContainer.appendChild(isDoneCheckbox);
-        checkboxNameContainer.appendChild(taskName);
-
-        const activeTab = document.querySelector(".active-tab");
-        
-        if (activeTab.classList.contains("active-tab") && activeTab.id === "today" && this.date === "") {
-            const today = new Date();
-            const todayString = today.toISOString().split('T')[0];
-            this.date = todayString;
-            console.log(todayString)
-        }
-
+        return taskName;
+    }
+    
+    createDateContainer() {
+        const dateContainer = document.createElement("div");
+        dateContainer.classList.add("date-container");
+        return dateContainer;
+    }
+    
+    createDateInput() {
         const dateInput = document.createElement("input");
         dateInput.classList.add("date-input");
         dateInput.type = "date";
@@ -69,50 +110,47 @@ export default class Task {
         dateInput.style.zIndex = "2";
         dateInput.style.opacity = "0";
         tasks.setMinMaxTime(dateInput);
-        
+        dateInput.addEventListener("change", () => this.updateTaskDate(dateInput.value));
+        return dateInput;
+    }
+    
+    createOverlay() {
         const overlay = document.createElement("input");
         overlay.type = "text";
         overlay.disabled = true;
         overlay.placeholder = "No date";
         overlay.classList.add("overlay");
         overlay.style.position = "absolute";
-
         this.handleDate(overlay);
-
-        const dateContainer = document.createElement("div");
-        dateContainer.appendChild(dateInput);
-        dateContainer.appendChild(overlay);
-        dateContainer.classList.add("date-container");
-
+        return overlay;
+    }
+    
+    createEditButton() {
         const editBtn = document.createElement("button");
         const editIconImg = document.createElement("img");
         editIconImg.src = editIcon;
         editBtn.appendChild(editIconImg);
         editBtn.classList.add("edit");
-        
+        return editBtn;
+    }
+    
+    createDeleteButton() {
         const deleteBtn = document.createElement("button");
         const deleteIconImg = document.createElement("img");
         deleteIconImg.src = deleteIcon;
-        deleteBtn.appendChild(deleteIconImg)
+        deleteBtn.appendChild(deleteIconImg);
         deleteBtn.classList.add("delete");
-
-        buttons.appendChild(editBtn);
-        buttons.appendChild(deleteBtn);
-
-        taskInfo.appendChild(checkboxNameContainer);
-        taskInfo.appendChild(buttons);
-        
-        taskContainer.appendChild(taskInfo);
-        taskContainer.appendChild(dateContainer);
-
-        return taskContainer;
+        deleteBtn.addEventListener("click", () => this.deleteTaskHandler());
+        return deleteBtn;
     }
 
+// delete task
     deleteTaskHandler() {
         tasks.removeTask(this.taskElement);
         this.taskElement.remove();
     }
 
+// updating task date
     updateTaskDate(newDate) {
         this.date = newDate;
         const overlay = this.taskElement.querySelector(".overlay");
@@ -120,6 +158,7 @@ export default class Task {
         this.handleDate(overlay);
     }
 
+// handling proper displaying of the date in the container
     handleDate(overlay){
         const today = new Date();
         const tomorrow = new Date(today);
@@ -150,6 +189,5 @@ export default class Task {
             overlay.placeholder = formattedDate;
         }
     }
-    
 }
 export { tasks };
