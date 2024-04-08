@@ -114,6 +114,26 @@ var Tasks = /*#__PURE__*/function () {
       content.appendChild(doneTasksContainer);
     }
   }, {
+    key: "displayTodayTasks",
+    value: function displayTodayTasks() {
+      var content = document.getElementById("content");
+      var tasksContainer = document.createElement("div");
+      tasksContainer.classList.add("tasks");
+      var today = new Date();
+      var todayDateString = today.toISOString().split('T')[0];
+
+      // Filter tasks with today's date
+      var tasksToDisplay = this.allTasks.filter(function (task) {
+        var taskDate = task.querySelector(".date-input").value;
+        var isUnchecked = !task.querySelector(".custom-checkbox").checked;
+        return taskDate === todayDateString && isUnchecked;
+      });
+      tasksToDisplay.forEach(function (task) {
+        tasksContainer.appendChild(task);
+      });
+      content.appendChild(tasksContainer);
+    }
+  }, {
     key: "displayAll",
     value: function displayAll() {
       var content = document.getElementById("content");
@@ -273,16 +293,14 @@ var Content = /*#__PURE__*/function () {
       addProjectBtn.addEventListener("click", function () {
         return _this.createAddProjectBtn();
       });
-
-      // Set the default active tab
       this.tabClicked(inboxBtn);
     }
   }, {
     key: "tabClicked",
     value: function tabClicked(tabButton) {
-      var allTabs = document.querySelectorAll(".tab");
+      var allTabs = document.querySelectorAll(".buttonDays");
       allTabs.forEach(function (tab) {
-        return tab.classList.remove("active-tab");
+        tab.classList.remove("active-tab");
       });
       tabButton.classList.add("active-tab");
       this.activeTab = tabButton.id;
@@ -315,6 +333,7 @@ var Content = /*#__PURE__*/function () {
     key: "todayTasks",
     value: function todayTasks() {
       this.createHeaderDay("Today");
+      _task_js__WEBPACK_IMPORTED_MODULE_0__.tasks.displayTodayTasks();
       this.createAddTaskBtn();
     }
   }, {
@@ -359,11 +378,17 @@ var Content = /*#__PURE__*/function () {
   }, {
     key: "displayTaskForm",
     value: function displayTaskForm() {
-      var _this3 = this;
+      // delete button for adding tasks when form for adding task is displayed
       var addTaskBtn = this.content.querySelector('.addTaskBtn');
       if (addTaskBtn) {
         addTaskBtn.remove();
       }
+      this.createTaskForm();
+    }
+  }, {
+    key: "createTaskForm",
+    value: function createTaskForm() {
+      var _this3 = this;
       var taskProperties = document.createElement("form");
       taskProperties.classList.add("add-task-form");
       var taskText = document.createElement("input");
@@ -388,7 +413,13 @@ var Content = /*#__PURE__*/function () {
       addTaskForm.value = "Add task";
       addTaskForm.classList.add("add-task-form-button");
       addTaskForm.addEventListener("click", function () {
-        _this3.displayNewTask(taskText.value, dateInput.value);
+        _this3.addNewTask(taskText.value, dateInput.value);
+        var activeTab = document.querySelector(".active-tab");
+        if (activeTab.classList.contains("active-tab") && activeTab.id === "today") {
+          _task_js__WEBPACK_IMPORTED_MODULE_0__.tasks.displayTodayTasks();
+        } else if (activeTab.classList.contains("active-tab") && activeTab.id === "inbox") {
+          _task_js__WEBPACK_IMPORTED_MODULE_0__.tasks.displayAll();
+        }
         taskProperties.remove();
         _this3.createAddTaskBtn();
       });
@@ -407,13 +438,13 @@ var Content = /*#__PURE__*/function () {
       this.content.appendChild(taskProperties);
     }
   }, {
-    key: "displayNewTask",
-    value: function displayNewTask(taskText) {
+    key: "addNewTask",
+    value: function addNewTask(taskText) {
       var date = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : None;
       if (taskText) {
         var newTask = new _task_js__WEBPACK_IMPORTED_MODULE_0__["default"](taskText, date);
+        return newTask;
       }
-      _task_js__WEBPACK_IMPORTED_MODULE_0__.tasks.displayAll();
     }
   }, {
     key: "clearContent",
@@ -539,35 +570,109 @@ var Task = /*#__PURE__*/function () {
       return _this.updateTaskDate(dateInput.value);
     });
   }
+
+  // methods needed to create task
   return _createClass(Task, [{
     key: "createTaskElement",
     value: function createTaskElement() {
-      var _this2 = this;
+      var taskContainer = this.createTaskContainer();
+      var taskInfo = this.createTaskInfo();
+      var buttons = this.createButtons();
+      var checkboxNameContainer = this.createCheckboxNameContainer();
+      var isDoneCheckbox = this.createIsDoneCheckbox();
+      var taskName = this.createTaskName();
+      var dateContainer = this.createDateContainer();
+      var editBtn = this.createEditButton();
+      var deleteBtn = this.createDeleteButton();
+      var overlay = this.createOverlay();
+
+      // Append elements to their respective containers
+      checkboxNameContainer.appendChild(isDoneCheckbox);
+      checkboxNameContainer.appendChild(taskName);
+      buttons.appendChild(editBtn);
+      buttons.appendChild(deleteBtn);
+      taskInfo.appendChild(checkboxNameContainer);
+      taskInfo.appendChild(buttons);
+      dateContainer.appendChild(this.createDateInput());
+      dateContainer.appendChild(overlay);
+      taskContainer.appendChild(taskInfo);
+      taskContainer.appendChild(dateContainer);
+      return taskContainer;
+    }
+  }, {
+    key: "createTaskContainer",
+    value: function createTaskContainer() {
       var taskContainer = document.createElement("div");
       taskContainer.classList.add("task");
+      return taskContainer;
+    }
+  }, {
+    key: "createTaskInfo",
+    value: function createTaskInfo() {
       var taskInfo = document.createElement("div");
       taskInfo.classList.add("task-info");
+      return taskInfo;
+    }
+  }, {
+    key: "createButtons",
+    value: function createButtons() {
       var buttons = document.createElement("div");
       buttons.classList.add("buttons");
+      return buttons;
+    }
+  }, {
+    key: "createCheckboxNameContainer",
+    value: function createCheckboxNameContainer() {
       var checkboxNameContainer = document.createElement("div");
       checkboxNameContainer.classList.add("checkbox-name-container");
+      return checkboxNameContainer;
+    }
+  }, {
+    key: "createIsDoneCheckbox",
+    value: function createIsDoneCheckbox() {
+      var _this2 = this;
       var isDoneCheckbox = document.createElement("input");
       isDoneCheckbox.classList.add("custom-checkbox");
       isDoneCheckbox.type = "checkbox";
       isDoneCheckbox.addEventListener("change", function () {
-        if (isDoneCheckbox.checked) {
-          _this2.taskElement.classList.add("done");
-          _allTasks_js__WEBPACK_IMPORTED_MODULE_2__.tasks.addDoneTask(_this2.taskElement);
-        } else {
-          _this2.taskElement.classList.remove("done");
-          _allTasks_js__WEBPACK_IMPORTED_MODULE_2__.tasks.removeDoneTask(_this2.taskElement);
-        }
+        return _this2.handleIsDoneChange(isDoneCheckbox);
       });
+      return isDoneCheckbox;
+    }
+  }, {
+    key: "handleIsDoneChange",
+    value: function handleIsDoneChange(isDoneCheckbox) {
+      var _this3 = this;
+      if (isDoneCheckbox.checked) {
+        this.taskElement.classList.add("done");
+        _allTasks_js__WEBPACK_IMPORTED_MODULE_2__.tasks.addDoneTask(this.taskElement);
+      } else {
+        this.taskElement.classList.remove("done");
+        _allTasks_js__WEBPACK_IMPORTED_MODULE_2__.tasks.removeDoneTask(this.taskElement);
+      }
+      setTimeout(function () {
+        _this3.taskElement.remove();
+      }, 400);
+    }
+  }, {
+    key: "createTaskName",
+    value: function createTaskName() {
       var taskName = document.createElement("div");
       taskName.classList.add("task-name");
       taskName.textContent = this.name;
-      checkboxNameContainer.appendChild(isDoneCheckbox);
-      checkboxNameContainer.appendChild(taskName);
+      return taskName;
+    }
+  }, {
+    key: "createDateContainer",
+    value: function createDateContainer() {
+      var dateContainer = document.createElement("div");
+      dateContainer.classList.add("date-container");
+      return dateContainer;
+    }
+  }, {
+    key: "createDateInput",
+    value: function createDateInput() {
+      var _this4 = this;
       var dateInput = document.createElement("input");
       dateInput.classList.add("date-input");
       dateInput.type = "date";
@@ -575,6 +680,14 @@ var Task = /*#__PURE__*/function () {
       dateInput.style.zIndex = "2";
       dateInput.style.opacity = "0";
       _allTasks_js__WEBPACK_IMPORTED_MODULE_2__.tasks.setMinMaxTime(dateInput);
+      dateInput.addEventListener("change", function () {
+        return _this4.updateTaskDate(dateInput.value);
+      });
+      return dateInput;
+    }
+  }, {
+    key: "createOverlay",
+    value: function createOverlay() {
       var overlay = document.createElement("input");
       overlay.type = "text";
       overlay.disabled = true;
@@ -582,34 +695,42 @@ var Task = /*#__PURE__*/function () {
       overlay.classList.add("overlay");
       overlay.style.position = "absolute";
       this.handleDate(overlay);
-      var dateContainer = document.createElement("div");
-      dateContainer.appendChild(dateInput);
-      dateContainer.appendChild(overlay);
-      dateContainer.classList.add("date-container");
+      return overlay;
+    }
+  }, {
+    key: "createEditButton",
+    value: function createEditButton() {
       var editBtn = document.createElement("button");
       var editIconImg = document.createElement("img");
       editIconImg.src = _assets_edit_text_png__WEBPACK_IMPORTED_MODULE_0__;
       editBtn.appendChild(editIconImg);
       editBtn.classList.add("edit");
+      return editBtn;
+    }
+  }, {
+    key: "createDeleteButton",
+    value: function createDeleteButton() {
+      var _this5 = this;
       var deleteBtn = document.createElement("button");
       var deleteIconImg = document.createElement("img");
       deleteIconImg.src = _assets_delete_png__WEBPACK_IMPORTED_MODULE_1__;
       deleteBtn.appendChild(deleteIconImg);
       deleteBtn.classList.add("delete");
-      buttons.appendChild(editBtn);
-      buttons.appendChild(deleteBtn);
-      taskInfo.appendChild(checkboxNameContainer);
-      taskInfo.appendChild(buttons);
-      taskContainer.appendChild(taskInfo);
-      taskContainer.appendChild(dateContainer);
-      return taskContainer;
+      deleteBtn.addEventListener("click", function () {
+        return _this5.deleteTaskHandler();
+      });
+      return deleteBtn;
     }
+
+    // delete task
   }, {
     key: "deleteTaskHandler",
     value: function deleteTaskHandler() {
       _allTasks_js__WEBPACK_IMPORTED_MODULE_2__.tasks.removeTask(this.taskElement);
       this.taskElement.remove();
     }
+
+    // updating task date
   }, {
     key: "updateTaskDate",
     value: function updateTaskDate(newDate) {
@@ -617,6 +738,8 @@ var Task = /*#__PURE__*/function () {
       var overlay = this.taskElement.querySelector(".overlay");
       this.handleDate(overlay);
     }
+
+    // handling proper displaying of the date in the container
   }, {
     key: "handleDate",
     value: function handleDate(overlay) {
@@ -1787,4 +1910,4 @@ __webpack_require__.r(__webpack_exports__);
 
 /******/ })()
 ;
-//# sourceMappingURL=bundlefded875dd63e3bd86d95.js.map
+//# sourceMappingURL=bundlea57047081dc0bb8b40fe.js.map
