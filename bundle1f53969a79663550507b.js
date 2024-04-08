@@ -582,9 +582,10 @@ var Task = /*#__PURE__*/function () {
       var isDoneCheckbox = this.createIsDoneCheckbox();
       var taskName = this.createTaskName();
       var dateContainer = this.createDateContainer();
+      var dateInput = this.createDateInput();
+      var overlay = this.createOverlay();
       var editBtn = this.createEditButton();
       var deleteBtn = this.createDeleteButton();
-      var overlay = this.createOverlay();
 
       // Append elements to their respective containers
       checkboxNameContainer.appendChild(isDoneCheckbox);
@@ -593,7 +594,7 @@ var Task = /*#__PURE__*/function () {
       buttons.appendChild(deleteBtn);
       taskInfo.appendChild(checkboxNameContainer);
       taskInfo.appendChild(buttons);
-      dateContainer.appendChild(this.createDateInput());
+      dateContainer.appendChild(dateInput);
       dateContainer.appendChild(overlay);
       taskContainer.appendChild(taskInfo);
       taskContainer.appendChild(dateContainer);
@@ -672,7 +673,12 @@ var Task = /*#__PURE__*/function () {
   }, {
     key: "createDateInput",
     value: function createDateInput() {
-      var _this4 = this;
+      var activeTab = document.querySelector(".active-tab");
+      if (activeTab.id === "today" && this.date === "") {
+        var today = new Date();
+        var todayString = today.toISOString().split('T')[0];
+        this.date = todayString;
+      }
       var dateInput = document.createElement("input");
       dateInput.classList.add("date-input");
       dateInput.type = "date";
@@ -680,9 +686,6 @@ var Task = /*#__PURE__*/function () {
       dateInput.style.zIndex = "2";
       dateInput.style.opacity = "0";
       _allTasks_js__WEBPACK_IMPORTED_MODULE_2__.tasks.setMinMaxTime(dateInput);
-      dateInput.addEventListener("change", function () {
-        return _this4.updateTaskDate(dateInput.value);
-      });
       return dateInput;
     }
   }, {
@@ -710,14 +713,14 @@ var Task = /*#__PURE__*/function () {
   }, {
     key: "createDeleteButton",
     value: function createDeleteButton() {
-      var _this5 = this;
+      var _this4 = this;
       var deleteBtn = document.createElement("button");
       var deleteIconImg = document.createElement("img");
       deleteIconImg.src = _assets_delete_png__WEBPACK_IMPORTED_MODULE_1__;
       deleteBtn.appendChild(deleteIconImg);
       deleteBtn.classList.add("delete");
       deleteBtn.addEventListener("click", function () {
-        return _this5.deleteTaskHandler();
+        return _this4.deleteTaskHandler();
       });
       return deleteBtn;
     }
@@ -767,6 +770,8 @@ var Task = /*#__PURE__*/function () {
         };
         var formattedDate = dateObj.toLocaleDateString("en-GB", options);
         overlay.placeholder = formattedDate;
+        console.log(formattedDate);
+        console.log(overlay.placeholder);
       }
     }
   }]);
@@ -1910,4 +1915,4 @@ __webpack_require__.r(__webpack_exports__);
 
 /******/ })()
 ;
-//# sourceMappingURL=bundlea57047081dc0bb8b40fe.js.map
+//# sourceMappingURL=bundle1f53969a79663550507b.js.map
