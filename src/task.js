@@ -24,9 +24,10 @@ export default class Task {
         const isDoneCheckbox = this.createIsDoneCheckbox();
         const taskName = this.createTaskName();
         const dateContainer = this.createDateContainer();
+        const dateInput = this.createDateInput();
+        const overlay = this.createOverlay();
         const editBtn = this.createEditButton();
         const deleteBtn = this.createDeleteButton();
-        const overlay = this.createOverlay();
     
         // Append elements to their respective containers
         checkboxNameContainer.appendChild(isDoneCheckbox);
@@ -35,7 +36,7 @@ export default class Task {
         buttons.appendChild(deleteBtn);
         taskInfo.appendChild(checkboxNameContainer);
         taskInfo.appendChild(buttons);
-        dateContainer.appendChild(this.createDateInput());
+        dateContainer.appendChild(dateInput);
         dateContainer.appendChild(overlay);
         taskContainer.appendChild(taskInfo);
         taskContainer.appendChild(dateContainer);
@@ -103,6 +104,14 @@ export default class Task {
     }
     
     createDateInput() {
+        const activeTab = document.querySelector(".active-tab");
+        
+        if (activeTab.id === "today" && this.date === "") {
+            const today = new Date();
+            const todayString = today.toISOString().split('T')[0];
+            this.date = todayString;
+        }
+
         const dateInput = document.createElement("input");
         dateInput.classList.add("date-input");
         dateInput.type = "date";
@@ -110,7 +119,6 @@ export default class Task {
         dateInput.style.zIndex = "2";
         dateInput.style.opacity = "0";
         tasks.setMinMaxTime(dateInput);
-        dateInput.addEventListener("change", () => this.updateTaskDate(dateInput.value));
         return dateInput;
     }
     
@@ -187,6 +195,8 @@ export default class Task {
             const formattedDate = dateObj.toLocaleDateString("en-GB", options);
 
             overlay.placeholder = formattedDate;
+            console.log(formattedDate)
+            console.log(overlay.placeholder)
         }
     }
 }
