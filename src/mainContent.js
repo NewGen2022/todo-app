@@ -24,13 +24,14 @@ export default class Content {
         doneBtn.addEventListener("click", () => this.tabClicked(doneBtn));
         addProjectBtn.addEventListener("click", () => this.createAddProjectBtn());
 
-        // Set the default active tab
         this.tabClicked(inboxBtn);
     }
 
     tabClicked(tabButton) {
-        const allTabs = document.querySelectorAll(".tab");
-        allTabs.forEach(tab => tab.classList.remove("active-tab"));
+        const allTabs = document.querySelectorAll(".buttonDays");
+        allTabs.forEach(tab => {
+            tab.classList.remove("active-tab");
+        });
     
         tabButton.classList.add("active-tab");
     
@@ -62,6 +63,7 @@ export default class Content {
 
     todayTasks() {
         this.createHeaderDay("Today");
+        tasks.displayTodayTasks();
         this.createAddTaskBtn();
     }
 
