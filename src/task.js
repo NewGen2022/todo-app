@@ -54,10 +54,8 @@ export default class Task {
         checkboxNameContainer.appendChild(taskName);
 
         const activeTab = document.querySelector(".active-tab");
-        console.log(activeTab)
-        console.log(activeTab.classList.contains("active-tab"))
         
-        if (activeTab.classList.contains("active-tab") && activeTab.id === "today") {
+        if (activeTab.classList.contains("active-tab") && activeTab.id === "today" && this.date === "") {
             const today = new Date();
             const todayString = today.toISOString().split('T')[0];
             this.date = todayString;
