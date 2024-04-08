@@ -1,3 +1,6 @@
+import sad from "./assets/sad.png"
+import congratulations from "./assets/party-popper.png"
+
 export default class Tasks {
     constructor() {
         this.allTasks = [];
@@ -81,11 +84,39 @@ export default class Tasks {
         const doneTasksContainer = document.createElement("div");
         doneTasksContainer.classList.add("tasks");
 
-        this.doneTasks.forEach(task => {
-            doneTasksContainer.appendChild(task);
-        });
+        if(this.doneTasks.length === 0){
+            const noTasksContainer = this.noDoneTasksYet("No done tasks yet");
+            doneTasksContainer.appendChild(noTasksContainer)
+        } else {
+            this.doneTasks.forEach(task => {
+                doneTasksContainer.appendChild(task);
+            });
+        }
+
 
         content.appendChild(doneTasksContainer);
+    }
+
+    noDoneTasksYet(text){
+        const noTasksContainer = document.createElement("p");
+        noTasksContainer.textContent = text;
+        noTasksContainer.classList.add("no-done-tasks");
+        const sadImg = document.createElement("img");
+        sadImg.src = sad;
+        noTasksContainer.appendChild(sadImg);
+
+        return noTasksContainer;
+    }
+
+    noTasksYet(text){
+        const noTasksContainer = document.createElement("p");
+        noTasksContainer.textContent = text;
+        noTasksContainer.classList.add("no-tasks");
+        const congratulationsImg = document.createElement("img");
+        congratulationsImg.src = congratulations;
+        noTasksContainer.appendChild(congratulationsImg);
+
+        return noTasksContainer;
     }
 
     displayTodayTasks(){
@@ -97,16 +128,20 @@ export default class Tasks {
         const today = new Date();
         const todayDateString = today.toISOString().split('T')[0];
 
-        // Filter tasks with today's date
-        const tasksToDisplay = this.allTasks.filter(task => {
-            const taskDate = task.querySelector(".date-input").value;
-            const isUnchecked = !task.querySelector(".custom-checkbox").checked;
-            return taskDate === todayDateString && isUnchecked;
-        });
-        
-        tasksToDisplay.forEach(task => {
-            tasksContainer.appendChild(task);
-        });
+        if(this.allTasks.length === 0){
+            const noTasksContainer = this.noTasksYet("No tasks yet");
+            tasksContainer.appendChild(noTasksContainer)
+        } else {
+            // Filter tasks with today's date
+            const tasksToDisplay = this.allTasks.filter(task => {
+                const taskDate = task.querySelector(".date-input").value;
+                const isUnchecked = !task.querySelector(".custom-checkbox").checked;
+                return taskDate === todayDateString && isUnchecked;
+            });
+            tasksToDisplay.forEach(task => {
+                tasksContainer.appendChild(task);
+            });
+        }
 
         content.appendChild(tasksContainer);
     }
@@ -117,11 +152,16 @@ export default class Tasks {
         const tasksContainer = document.createElement("div");
         tasksContainer.classList.add("tasks");
 
-        const tasksToDisplay = this.allTasks.filter(task => !task.classList.contains("done"));
+        if(this.allTasks.length === 0){
+            const noTasksContainer = this.noTasksYet("No tasks yet");
+            tasksContainer.appendChild(noTasksContainer)
+        } else {
+            const tasksToDisplay = this.allTasks.filter(task => !task.classList.contains("done"));
 
-        tasksToDisplay.forEach(task => {
-            tasksContainer.appendChild(task);
-        });
+            tasksToDisplay.forEach(task => {
+                tasksContainer.appendChild(task);
+            });
+        }
 
         content.appendChild(tasksContainer);
     }
