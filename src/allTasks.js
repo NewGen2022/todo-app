@@ -122,8 +122,16 @@ export default class Tasks {
     displayTodayTasks(){
         const content = document.getElementById("content");
 
-        const tasksContainer = document.createElement("div");
-        tasksContainer.classList.add("tasks");
+        let tasksContainer = document.querySelector(".tasks");
+        
+        // If tasks container doesn't exist, create a new one
+        if (!tasksContainer) {
+            tasksContainer = document.createElement("div");
+            tasksContainer.classList.add("tasks");
+            content.appendChild(tasksContainer);
+        } else {
+            tasksContainer.innerHTML = "";
+        }
 
         const today = new Date();
         const todayDateString = today.toISOString().split('T')[0];
