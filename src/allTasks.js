@@ -12,7 +12,6 @@ export default class Tasks {
     }
 
     addDoneTask(doneTask){
-        console.log(doneTask)
         this.doneTasks.push(doneTask);
     }
 
@@ -78,25 +77,6 @@ export default class Tasks {
         dateInput.max = max;
     }
 
-    displayDone(){
-        const content = document.getElementById("content");
-
-        const doneTasksContainer = document.createElement("div");
-        doneTasksContainer.classList.add("tasks");
-
-        if(this.doneTasks.length === 0){
-            const noTasksContainer = this.noDoneTasksYet("No done tasks yet");
-            doneTasksContainer.appendChild(noTasksContainer)
-        } else {
-            this.doneTasks.forEach(task => {
-                doneTasksContainer.appendChild(task);
-            });
-        }
-
-
-        content.appendChild(doneTasksContainer);
-    }
-
     noDoneTasksYet(text){
         const noTasksContainer = document.createElement("p");
         noTasksContainer.textContent = text;
@@ -119,11 +99,12 @@ export default class Tasks {
         return noTasksContainer;
     }
 
-    displayTodayTasks(){
+    displayAll() { 
         const content = document.getElementById("content");
-
         let tasksContainer = document.querySelector(".tasks");
-        
+        const activeTab = document.querySelector(".active-tab").id;
+        const today = new Date();
+
         // If tasks container doesn't exist, create a new one
         if (!tasksContainer) {
             tasksContainer = document.createElement("div");
@@ -133,50 +114,69 @@ export default class Tasks {
             tasksContainer.innerHTML = "";
         }
 
-        const today = new Date();
-        const todayDateString = today.toISOString().split('T')[0];
+        switch (activeTab) {
+            case "inbox":
+                if (this.allTasks.length === 0) {
+                    const noTasksContainer = this.noTasksYet("No tasks yet");
+                    tasksContainer.appendChild(noTasksContainer);
+                } else {
+                    const tasksToDisplay = this.allTasks.filter(task => !task.classList.contains("done"));
+                    tasksToDisplay.forEach(task => {
+                        tasksContainer.appendChild(task);
+                    });
+                }
+                break;
+            case "today":
+                const todayDateString = today.toISOString().split('T')[0];
 
-        if(this.allTasks.length === 0){
-            const noTasksContainer = this.noTasksYet("No tasks yet");
-            tasksContainer.appendChild(noTasksContainer)
-        } else {
-            // Filter tasks with today's date
-            const tasksToDisplay = this.allTasks.filter(task => {
-                const taskDate = task.querySelector(".date-input").value;
-                const isUnchecked = !task.querySelector(".custom-checkbox").checked;
-                return taskDate === todayDateString && isUnchecked;
-            });
-            tasksToDisplay.forEach(task => {
-                tasksContainer.appendChild(task);
-            });
+                if(this.allTasks.length === 0){
+                    const noTasksContainer = this.noTasksYet("No tasks today yet");
+                    tasksContainer.appendChild(noTasksContainer)
+                } else {
+                    // Filter tasks with today's date
+                    const tasksToDisplay = this.allTasks.filter(task => {
+                        const taskDate = task.querySelector(".date-input").value;
+                        const isUnchecked = !task.querySelector(".custom-checkbox").checked;
+                        return taskDate === todayDateString && isUnchecked;
+                    });
+                    tasksToDisplay.forEach(task => {
+                        tasksContainer.appendChild(task);
+                    });
+                }
+                break;
+            case "thisWeek":
+                const firstDayOfWeek = new Date(today.setDate(today.getDate() - today.getDay())); // Get the first day of the current week
+                const lastDayOfWeek = new Date(today.setDate(firstDayOfWeek.getDate() + 6)); // Get the last day of the current week
+            
+                const tasksToDisplay = this.allTasks.filter(task => {
+                    const taskDate = new Date(task.querySelector(".date-input").value);
+                    return taskDate >= firstDayOfWeek || taskDate <= lastDayOfWeek;
+                });
+            
+                if (tasksToDisplay.length === 0) {
+                    const noTasksContainer = this.noTasksYet("No tasks for this week yet");
+                    tasksContainer.appendChild(noTasksContainer);
+                } else {
+                    tasksToDisplay.forEach(task => {
+                        tasksContainer.appendChild(task);
+                    });
+                }
+                break;
+            case "done":
+                if(this.doneTasks.length === 0){
+                    const noTasksContainer = this.noDoneTasksYet("No done tasks yet");
+                    tasksContainer.appendChild(noTasksContainer)
+                } else {
+                    this.doneTasks.forEach(task => {
+                        tasksContainer.appendChild(task);
+                    });
+                }
+                break;
+            default:
+                break;
         }
 
         content.appendChild(tasksContainer);
-    }
-
-    displayAll() {
-        const content = document.getElementById("content");
-        
-        let tasksContainer = document.querySelector(".tasks");
-        
-        // If tasks container doesn't exist, create a new one
-        if (!tasksContainer) {
-            tasksContainer = document.createElement("div");
-            tasksContainer.classList.add("tasks");
-            content.appendChild(tasksContainer);
-        } else {
-            tasksContainer.innerHTML = "";
-        }
-    
-        if (this.allTasks.length === 0) {
-            const noTasksContainer = this.noTasksYet("No tasks yet");
-            tasksContainer.appendChild(noTasksContainer);
-        } else {
-            const tasksToDisplay = this.allTasks.filter(task => !task.classList.contains("done"));
-            tasksToDisplay.forEach(task => {
-                tasksContainer.appendChild(task);
-            });
-        }
     }
 }
 
