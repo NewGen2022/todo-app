@@ -1,16 +1,24 @@
 import Task, { tasks } from "./task.js";
 
 export default class Content {
+    // initialize content class
     constructor() {
         this.main = document.getElementById("main");
+
         this.content = document.createElement("div");
         this.content.setAttribute("id", "content");
+
         this.main.appendChild(this.content);
+
         this.allTasks = tasks.getAllTasks();
-        this.activeTab = null;
+        
         this.sidebarEventListeners();
+
+        this.activeTab = null;
+        
     }
 
+    // adding event listeners for all sidebar buttons
     sidebarEventListeners() {
         const inboxBtn = document.getElementById("inbox");
         const todayBtn = document.getElementById("today");
@@ -27,6 +35,7 @@ export default class Content {
         this.tabClicked(inboxBtn);
     }
 
+    // tracking active button of the sidebar
     tabClicked(tabButton) {
         const allTabs = document.querySelectorAll(".buttonDays");
         allTabs.forEach(tab => {
@@ -34,8 +43,8 @@ export default class Content {
         });
     
         tabButton.classList.add("active-tab");
-    
         this.activeTab = tabButton.id;
+    
         this.clearContent();
         switch (this.activeTab) {
             case "inbox":
@@ -55,34 +64,41 @@ export default class Content {
         }
     }
     
+    // displaying all content that belongs to inbox tab-button
     inboxTasks() {
         this.createHeaderDay("Inbox");
         tasks.displayAll();
         this.createAddTaskBtn();
     }
 
+    // displaying all content that belongs to today tab-button
     todayTasks() {
         this.createHeaderDay("Today");
-        tasks.displayTodayTasks();
+        tasks.displayAll();
         this.createAddTaskBtn();
     }
 
+    // displaying all content that belongs to this week tab-button
     thisWeekTasks() {
         this.createHeaderDay("This week");
+        tasks.displayAll();
         this.createAddTaskBtn();
     }
 
+    // displaying all content that belongs to done tab-button
     doneTasks(){
         this.createHeaderDay("Done");
-        tasks.displayDone();
+        tasks.displayAll();
     }
 
+    // displaying all content that belongs to inbox tab-button
     createAddProjectBtn() {
         this.clearContent();
         this.createHeaderDay("Add Project");
         this.createAddTaskBtn();
     }
 
+    // method to create header for active tab-button
     createHeaderDay(textContent) {
         const headerDay = document.createElement("div");
         headerDay.classList.add("headerDay");
@@ -91,6 +107,7 @@ export default class Content {
         this.content.appendChild(headerDay);
     }
 
+    // create button for adding new task
     createAddTaskBtn() {
         const btn = document.createElement("button");
         btn.classList.add("addTaskBtn");
@@ -101,16 +118,7 @@ export default class Content {
         this.content.appendChild(btn);
     }
 
-    displayTaskForm(){
-        // delete button for adding tasks when form for adding task is displayed
-        const addTaskBtn = this.content.querySelector('.addTaskBtn');
-        if (addTaskBtn) {
-            addTaskBtn.remove();
-        }
-
-        this.createTaskForm();
-    }
-
+    // create form for adding new task properties
     createTaskForm(){
         const taskProperties = document.createElement("form");
         taskProperties.classList.add("add-task-form");
@@ -147,12 +155,7 @@ export default class Content {
         addTaskForm.classList.add("add-task-form-button");
         addTaskForm.addEventListener("click", () => {
             this.addNewTask(taskText.value, dateInput.value);
-            const activeTab = document.querySelector(".active-tab");
-            if (activeTab.classList.contains("active-tab") && activeTab.id === "today"){
-                tasks.displayTodayTasks();
-            } else if(activeTab.classList.contains("active-tab") && activeTab.id === "inbox"){
-                tasks.displayAll();
-            }
+            tasks.displayAll();
             taskProperties.remove();
             this.createAddTaskBtn()
         });
@@ -175,6 +178,18 @@ export default class Content {
         this.content.appendChild(taskProperties);
     }
 
+    // display form for adding new task properties
+    displayTaskForm(){
+        // delete button for adding tasks when form for adding task is displayed
+        const addTaskBtn = this.content.querySelector('.addTaskBtn');
+        if (addTaskBtn) {
+            addTaskBtn.remove();
+        }
+
+        this.createTaskForm();
+    }
+
+    // adding new task 
     addNewTask(taskText, date=None){
         if(taskText){
             const newTask = new Task(taskText, date);
@@ -182,6 +197,7 @@ export default class Content {
         }
     }
 
+    // clear all content in content container 
     clearContent() {
         this.content.textContent = "";
     }
