@@ -16,10 +16,19 @@ export default class Tasks {
     }
 
     removeTask(task) {
-        const index = this.allTasks.indexOf(task);
-        if (index !== -1) {
-            this.allTasks.splice(index, 1);
+        const indexAllTasks = this.allTasks.indexOf(task);
+        const indexDoneTasks = this.doneTasks.indexOf(task);
+        
+        if (indexAllTasks !== -1) {
+            this.allTasks.splice(indexAllTasks, 1);
         }
+    
+        if (indexDoneTasks !== -1) {
+            this.doneTasks.splice(indexDoneTasks, 1);
+        }
+    
+        // Check if the active tab is the inbox tab
+        this.displayNoTasksMessage();
     }
 
     removeDoneTask(taskElement){
@@ -36,7 +45,7 @@ export default class Tasks {
     getDoneTasks(){
         return this.doneTasks;
     }
-    
+
     setMinMaxTime(dateInput){
         const today = new Date();
         const year = today.getFullYear();
@@ -99,11 +108,39 @@ export default class Tasks {
         return noTasksContainer;
     }
 
+    displayNoTasksMessage() {
+        const tasksContainer = document.querySelector(".tasks");
+        if (tasksContainer.children.length === 0) {
+            const activeTab = document.querySelector(".active-tab").id;
+            let noTasksContainer = null;
+            switch(activeTab){
+                case "inbox":
+                    noTasksContainer = this.noTasksYet("No tasks yet");
+                    break;
+                case "today":
+                    noTasksContainer = this.noTasksYet("No tasks today yet");
+                    break;
+                case "thisWeek":
+                    noTasksContainer = this.noTasksYet("No tasks for this week yet");
+                    break;
+                case "done":
+                    noTasksContainer = this.noDoneTasksYet("No done tasks yet");
+                    break;
+                default:
+                    noTasksContainer = document.createElement("p");
+                    noTasksContainer.textContent = "No tasks for this tab yet";
+                    break;
+            }
+            tasksContainer.appendChild(noTasksContainer);
+        }
+    }
+    
     displayAll() { 
         const content = document.getElementById("content");
         let tasksContainer = document.querySelector(".tasks");
         const activeTab = document.querySelector(".active-tab").id;
         const today = new Date();
+        let tasksToDisplay = null;
 
         // If tasks container doesn't exist, create a new one
         if (!tasksContainer) {
@@ -116,11 +153,12 @@ export default class Tasks {
 
         switch (activeTab) {
             case "inbox":
-                if (this.allTasks.length === 0) {
+                tasksToDisplay = this.allTasks.filter(task => !task.classList.contains("done"));
+
+                if (tasksToDisplay.length === 0) {
                     const noTasksContainer = this.noTasksYet("No tasks yet");
                     tasksContainer.appendChild(noTasksContainer);
                 } else {
-                    const tasksToDisplay = this.allTasks.filter(task => !task.classList.contains("done"));
                     tasksToDisplay.forEach(task => {
                         tasksContainer.appendChild(task);
                     });
@@ -129,16 +167,17 @@ export default class Tasks {
             case "today":
                 const todayDateString = today.toISOString().split('T')[0];
 
-                if(this.allTasks.length === 0){
+                // Filter tasks with today's date
+                tasksToDisplay = this.allTasks.filter(task => {
+                    const taskDate = task.querySelector(".date-input").value;
+                    const isUnchecked = !task.querySelector(".custom-checkbox").checked;
+                    return taskDate === todayDateString && isUnchecked;
+                });
+
+                if(tasksToDisplay.length === 0){
                     const noTasksContainer = this.noTasksYet("No tasks today yet");
                     tasksContainer.appendChild(noTasksContainer)
                 } else {
-                    // Filter tasks with today's date
-                    const tasksToDisplay = this.allTasks.filter(task => {
-                        const taskDate = task.querySelector(".date-input").value;
-                        const isUnchecked = !task.querySelector(".custom-checkbox").checked;
-                        return taskDate === todayDateString && isUnchecked;
-                    });
                     tasksToDisplay.forEach(task => {
                         tasksContainer.appendChild(task);
                     });
@@ -146,17 +185,18 @@ export default class Tasks {
                 break;
             case "thisWeek":
                 const firstDayOfWeek = new Date(today.setDate(today.getDate() - today.getDay())); // Get the first day of the current week
-                const lastDayOfWeek = new Date(today.setDate(firstDayOfWeek.getDate() + 6)); // Get the last day of the current week
+                const lastDayOfWeek = new Date(today.setDate(firstDayOfWeek.getDate() + 7)); // Get the last day of the current week
             
-                const tasksToDisplay = this.allTasks.filter(task => {
+                tasksToDisplay = this.allTasks.filter(task => {
                     const taskDate = new Date(task.querySelector(".date-input").value);
-                    return taskDate >= firstDayOfWeek || taskDate <= lastDayOfWeek;
+                    const isUnchecked = !task.querySelector(".custom-checkbox").checked;
+                    return (taskDate >= firstDayOfWeek && taskDate <= lastDayOfWeek) && isUnchecked;
                 });
             
                 if (tasksToDisplay.length === 0) {
                     const noTasksContainer = this.noTasksYet("No tasks for this week yet");
                     tasksContainer.appendChild(noTasksContainer);
-                } else {
+                }else{
                     tasksToDisplay.forEach(task => {
                         tasksContainer.appendChild(task);
                     });
