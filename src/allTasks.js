@@ -148,22 +148,27 @@ export default class Tasks {
 
     displayAll() {
         const content = document.getElementById("content");
-
-        const tasksContainer = document.createElement("div");
-        tasksContainer.classList.add("tasks");
-
-        if(this.allTasks.length === 0){
+        
+        let tasksContainer = document.querySelector(".tasks");
+        
+        // If tasks container doesn't exist, create a new one
+        if (!tasksContainer) {
+            tasksContainer = document.createElement("div");
+            tasksContainer.classList.add("tasks");
+            content.appendChild(tasksContainer);
+        } else {
+            tasksContainer.innerHTML = "";
+        }
+    
+        if (this.allTasks.length === 0) {
             const noTasksContainer = this.noTasksYet("No tasks yet");
-            tasksContainer.appendChild(noTasksContainer)
+            tasksContainer.appendChild(noTasksContainer);
         } else {
             const tasksToDisplay = this.allTasks.filter(task => !task.classList.contains("done"));
-
             tasksToDisplay.forEach(task => {
                 tasksContainer.appendChild(task);
             });
         }
-
-        content.appendChild(tasksContainer);
     }
 }
 
