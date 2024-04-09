@@ -9,6 +9,7 @@ export default class Task {
         this.date = date;
         this.taskElement = this.createTaskElement();
         tasks.addTask(this.taskElement);
+
         this.taskElement.querySelector(".delete").addEventListener("click", this.deleteTaskHandler.bind(this));
     
         const dateInput = this.taskElement.querySelector(".date-input");
@@ -87,7 +88,9 @@ export default class Task {
 
         setTimeout(() => {
             this.taskElement.remove();
-        }, 400);
+            tasks.displayNoTasksMessage();
+        }, 450);
+
     }
     
     createTaskName() {
