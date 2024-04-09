@@ -314,6 +314,9 @@ input[type="date"]{
     text-decoration: line-through;
 }
 
+.active-tab{
+    background-color: #444444;
+}
 
 .buttons{
     display: flex;
