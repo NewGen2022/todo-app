@@ -34,6 +34,13 @@ export default class Tasks {
         this.displayNoTasksMessage();
     }
 
+    removeDoneTask(taskElement){
+        const index = this.doneTasks.indexOf(taskElement);
+        if (index !== -1) {
+            this.doneTasks.splice(index, 1);
+        }
+    }
+
     // getting all tasks from array
     getAllTasks() {
         return this.allTasks;
