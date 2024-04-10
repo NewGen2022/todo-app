@@ -7,59 +7,57 @@ export default class Sidebar{
     constructor(){
         const main = document.getElementById("main");
     
-        const sidebar = document.createElement("div");
-        sidebar.setAttribute("id", "sidebar");
-    
-        const inbox = document.createElement("button");
-        const today = document.createElement("button");
-        const thisWeek = document.createElement("button");
-        const done = document.createElement("button");
-    
-        const inboxImg = document.createElement("img");
-        const todayImg = document.createElement("img");
-        const thisWeekImg = document.createElement("img");
-        const doneImg = document.createElement("img");
-    
-        inboxImg.src = inboxIcon;
-        todayImg.src = todayIcon;
-        thisWeekImg.src = thisWeekIcon;
-        doneImg.src = doneIcon;
-    
-        inbox.appendChild(inboxImg);
-        today.appendChild(todayImg);
-        thisWeek.appendChild(thisWeekImg);
-    
-        inbox.textContent = "Inbox";
-        today.textContent = "Today";
-        thisWeek.textContent = "This week";
-        done.textContent = "Done";
-    
-        inbox.classList.add("buttonDays", "with-icon");
-        today.classList.add("buttonDays", "with-icon");
-        thisWeek.classList.add("buttonDays", "with-icon");
-        done.classList.add("buttonDays", "with-icon");
-    
-        inbox.setAttribute("id", "inbox");
-        today.setAttribute("id", "today");
-        thisWeek.setAttribute("id", "thisWeek");
-        done.setAttribute("id", "done");
-    
+        // create sidebar
+        this.sidebar = document.createElement("div");
+        this.sidebar.setAttribute("id", "sidebar");
+
+        // create tab for displaying inbox (all) tasks
+        this.createTab(inboxIcon, "Inbox", "inbox");
+        // create tab for displaying today tasks
+        this.createTab(todayIcon, "Today", "today");
+        // create tab for displaying tasks for this week
+        this.createTab(thisWeekIcon, "This week", "thisWeek");
+        // create tab for displaying done tasks
+        this.createTab(doneIcon, "Done", "done");
+        
+        // create section for projects
+        this.createProjectSection();
+
+        // append sidebar to main content
+        main.appendChild(this.sidebar);
+    }
+
+    // creating different tabs in sidebar
+    createTab(tabIcon, textContent, id){
+        const tab = document.createElement("button");
+        const tabImg = document.createElement("img");
+
+        tabImg.src = tabIcon;
+        tab.appendChild(tabImg);
+        
+        tab.textContent = textContent;
+        tab.classList.add("buttonDays", "with-icon");
+        tab.setAttribute("id", id);
+
+        this.sidebar.appendChild(tab);
+
+        return tab;
+    }
+
+    // create section for projects
+    createProjectSection(){
         const projectsHeader = document.createElement("h2");
         projectsHeader.textContent = "Projects";
 
-        const addProjectButton = document.createElement("button");
-        addProjectButton.textContent = "Add project";
+        const projectsButton = document.createElement("button");
+        projectsButton.textContent = "Add project";
 
-        addProjectButton.setAttribute("id", "addProjectBtn");
-        addProjectButton.classList.add("buttonDays", "with-icon");
-        
-        sidebar.appendChild(inbox);
-        sidebar.appendChild(today);
-        sidebar.appendChild(thisWeek);
-        sidebar.appendChild(done);
-        sidebar.appendChild(projectsHeader);
-        sidebar.appendChild(addProjectButton);
+        projectsButton.setAttribute("id", "addProjectBtn");
+        projectsButton.classList.add("buttonDays", "with-icon");
 
-        main.appendChild(sidebar);
-    };
-};
+        this.sidebar.appendChild(projectsHeader);
+        this.sidebar.appendChild(projectsButton);
+
+        return { projectsHeader, projectsButton };
+    }
+}
