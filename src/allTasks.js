@@ -7,14 +7,17 @@ export default class Tasks {
         this.doneTasks = [];
     }
 
+    // adding task to array with all tasks
     addTask(task) {
         this.allTasks.push(task);
     }
 
+    // adding task to array with done tasks
     addDoneTask(doneTask){
         this.doneTasks.push(doneTask);
     }
 
+    // removing task from array with all/done tasks
     removeTask(task) {
         const indexAllTasks = this.allTasks.indexOf(task);
         const indexDoneTasks = this.doneTasks.indexOf(task);
@@ -31,21 +34,17 @@ export default class Tasks {
         this.displayNoTasksMessage();
     }
 
-    removeDoneTask(taskElement){
-        const index = this.doneTasks.indexOf(taskElement);
-        if (index !== -1) {
-            this.doneTasks.splice(index, 1);
-    }
-    }
-
+    // getting all tasks from array
     getAllTasks() {
         return this.allTasks;
     }
 
+    // getting done tasks from array
     getDoneTasks(){
         return this.doneTasks;
     }
 
+    // setting min and max date that person can add task on
     setMinMaxTime(dateInput){
         const today = new Date();
         const year = today.getFullYear();
@@ -86,6 +85,7 @@ export default class Tasks {
         dateInput.max = max;
     }
 
+    // method for making container with message when there is no done tasks 
     noDoneTasksYet(text){
         const noTasksContainer = document.createElement("p");
         noTasksContainer.textContent = text;
@@ -97,6 +97,7 @@ export default class Tasks {
         return noTasksContainer;
     }
 
+    // method for making container with message when there is no tasks 
     noTasksYet(text){
         const noTasksContainer = document.createElement("p");
         noTasksContainer.textContent = text;
@@ -108,6 +109,7 @@ export default class Tasks {
         return noTasksContainer;
     }
 
+    // method for checking and displaying when there is no done tasks 
     displayNoTasksMessage() {
         const tasksContainer = document.querySelector(".tasks");
         if (tasksContainer.children.length === 0) {
@@ -135,6 +137,7 @@ export default class Tasks {
         }
     }
     
+    // method for displaying all tasks according to the active tab-button
     displayAll() { 
         const content = document.getElementById("content");
         let tasksContainer = document.querySelector(".tasks");
