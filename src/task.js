@@ -16,7 +16,7 @@ export default class Task {
         dateInput.addEventListener("change", () => this.updateTaskDate(dateInput.value));
     }
 
-// methods needed to create task
+    // all methods needed to create task
     createTaskElement() {
         const taskContainer = this.createTaskContainer();
         const taskInfo = this.createTaskInfo();
@@ -142,6 +142,9 @@ export default class Task {
         editIconImg.src = editIcon;
         editBtn.appendChild(editIconImg);
         editBtn.classList.add("edit");
+        editBtn.addEventListener("click", () => {
+            this.editTask();
+        })
         return editBtn;
     }
     
@@ -155,13 +158,13 @@ export default class Task {
         return deleteBtn;
     }
 
-// delete task
+    // delete task
     deleteTaskHandler() {
         tasks.removeTask(this.taskElement);
         this.taskElement.remove();
     }
 
-// updating task date
+    // updating task date
     updateTaskDate(newDate) {
         this.date = newDate;
         const overlay = this.taskElement.querySelector(".overlay");
@@ -169,7 +172,82 @@ export default class Task {
         this.handleDate(overlay);
     }
 
-// handling proper displaying of the date in the container
+    // form for editing task
+    editTask(){
+        const form = document.createElement("form");
+        form.classList.add("edit-task-form");
+
+        const taskNameInput = document.createElement("input");
+        taskNameInput.type = "text";
+        taskNameInput.placeholder = "Enter task name";
+        taskNameInput.value = this.name;
+        taskNameInput.classList.add("task-text-form");
+
+        const date = document.createElement("div");
+        date.classList.add("date-input");
+
+        const dateInput = document.createElement("input");
+        dateInput.type = "date";
+        dateInput.classList.add("date-input");
+        dateInput.value = this.date; // Populate with current task date
+
+        date.appendChild(dateInput)
+
+        const hr = document.createElement("hr");
+
+        const buttonContainer = document.createElement("div");
+        buttonContainer.classList.add("add-cancel");
+
+        const submitButton = document.createElement("button");
+        submitButton.type = "button";
+        submitButton.textContent = "Save Changes";
+        submitButton.classList.add("edit-task-form-button")
+        submitButton.addEventListener("click", () => {
+            this.updateTask(taskNameInput.value, dateInput.value);
+            form.remove();
+        });
+
+        const cancelButton = document.createElement("button");
+        cancelButton.type = "button";
+        cancelButton.textContent = "Cancel";
+        cancelButton.classList.add("cancel-form-button")
+        cancelButton.addEventListener("click", () => {
+            form.remove();
+        });
+
+        buttonContainer.appendChild(submitButton);
+        buttonContainer.appendChild(cancelButton);
+
+        // Append elements to form
+        form.appendChild(taskNameInput);
+        form.appendChild(date);
+        form.appendChild(hr);
+        form.appendChild(buttonContainer);
+
+        // Append form to the document
+        const content = document.getElementById("content");
+        const lastChild = content.lastElementChild;
+
+        // Insert the form before the last child
+        content.insertBefore(form, lastChild);
+    }
+
+    // updating task
+    updateTask(newName, newDate) {
+        this.name = newName;
+        this.date = newDate;
+    
+        // Update task name displayed in the UI
+        const taskNameElement = this.taskElement.querySelector(".task-name");
+        taskNameElement.textContent = newName;
+        this.taskElement.name = newName;
+        console.log(this.taskElement)
+    
+        // Update task date displayed in the UI
+        this.updateTaskDate(newDate)
+    }
+
+    // handling proper displaying of the date in the container
     handleDate(overlay){
         const today = new Date();
         const tomorrow = new Date(today);
