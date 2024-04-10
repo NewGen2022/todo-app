@@ -109,12 +109,13 @@ button{
     background-image: url('../assets/plus-symbol-button.png');
 }
 
-.add-task-form{
+.add-task-form, .edit-task-form{
     display: flex;
     flex-direction: column;
     border: 2px solid rgb(127, 127, 127);
     padding: 20px 15px 20px 15px;
     border-radius: 10px;
+    margin-bottom: 10px;
 }
 
 input[type="text"]{
@@ -129,7 +130,7 @@ input[type="text"]{
     background-color: #232023;
 }
 
-input[type="button"]{
+input[type="button"], .edit-task-form-button, .cancel-form-button{
     border-radius: 5px;
     background-color: #2f2d2f;
     font-weight: 600;
@@ -144,10 +145,10 @@ input[type="button"]{
     gap: 5px;
 }
 
-.add-task-form-button{
+.add-task-form-button, .edit-task-form-button{
     border: 1px solid #2ee700;
 }
-.add-task-form-button:hover{
+.add-task-form-button:hover, .edit-task-form-button:hover{
     color: #000000;
     background-color: #2ee700;
 }
@@ -270,6 +271,7 @@ input[type="date"]{
     border: 2px solid #747474;
     border-radius: 5px;
     margin-top: 5px;
+    max-width: 110px;
     padding: 5px 15px;
     cursor: pointer;
 }
