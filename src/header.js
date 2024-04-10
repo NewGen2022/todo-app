@@ -1,5 +1,6 @@
 import honeyBadger from "./assets/transparent-bg-honey-badger.png";
 
+// function for creating header
 export default function generateHeader(){
     const body = document.querySelector("body");
 

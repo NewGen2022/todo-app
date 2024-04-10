@@ -1,5 +1,6 @@
 import githubMark from "./assets/github-mark-white.svg";
 
+// function for creating footer
 export default function generateFooter(){
     const body = document.querySelector("body");
 
