@@ -8,6 +8,9 @@ export default function generateMain(){
     main.setAttribute("id", "main");
     body.appendChild(main);
 
-    const sidebar = new Sidebar();
-    const content = new Content();
+    // create sidebar
+    new Sidebar();
+
+    // create main content
+    new Content();
 }

@@ -147,7 +147,6 @@ export default class Content {
 
         date.appendChild(dateInput);
 
-        date.type = "date";
         date.classList.add("date-input");
 
         addTaskForm.type = "button";
