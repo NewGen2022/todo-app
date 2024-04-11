@@ -2,34 +2,34 @@ import sad from "./assets/sad.png"
 import congratulations from "./assets/party-popper.png"
 
 export default class Tasks {
-    constructor() {
-        this.allTasks = [];
-        this.doneTasks = [];
-        this.projects = {};
-    }
+    #allTasks = [];
+    #doneTasks = [];
+    #projects = {};
+
+    constructor() {}
 
     // adding task to array with all tasks
     addTask(task, activeTab) {
         if (activeTab && activeTab !== "inbox" && activeTab !== "today" && activeTab !== "thisWeek" && activeTab !== "done") {
-            if (this.projects.hasOwnProperty(activeTab)) {
-                this.projects[activeTab].push(task);
+            if (this.#projects.hasOwnProperty(activeTab)) {
+                this.#projects[activeTab].push(task);
             } else {
                 console.error(`Project '${activeTab}' does not exist.`);
             }
         } else {
-            this.allTasks.push(task);
+            this.#allTasks.push(task);
         }
     }
 
     // adding task to array with done tasks
     addDoneTask(doneTask){
-        this.doneTasks.push(doneTask);
+        this.#doneTasks.push(doneTask);
     }
 
     // adding specific project
     addProject(projectName){
         if (projectName.trim() !== '') {
-            this.projects[projectName] = [];
+            this.#projects[projectName] = [];
             return true;
         } else {
             console.error("Project name cannot be empty");
@@ -39,15 +39,15 @@ export default class Tasks {
 
     // removing task from array with all/done tasks
     removeTask(task) {
-        const indexAllTasks = this.allTasks.indexOf(task);
-        const indexDoneTasks = this.doneTasks.indexOf(task);
+        const indexAllTasks = this.#allTasks.indexOf(task);
+        const indexDoneTasks = this.#doneTasks.indexOf(task);
         
         if (indexAllTasks !== -1) {
-            this.allTasks.splice(indexAllTasks, 1);
+            this.#allTasks.splice(indexAllTasks, 1);
         }
     
         if (indexDoneTasks !== -1) {
-            this.doneTasks.splice(indexDoneTasks, 1);
+            this.#doneTasks.splice(indexDoneTasks, 1);
         }
     
         // Check if the active tab is the inbox tab
@@ -56,21 +56,21 @@ export default class Tasks {
 
     // removing task from done tasks array
     removeDoneTask(taskElement){
-        const index = this.doneTasks.indexOf(taskElement);
+        const index = this.#doneTasks.indexOf(taskElement);
         if (index !== -1) {
-            this.doneTasks.splice(index, 1);
+            this.#doneTasks.splice(index, 1);
         }
     }
 
     // deleting specific project
     removeProject(projectName){
-        delete this.projects[projectName];
+        delete this.#projects[projectName];
     }
 
     // deleting task from the specific project
     removeTaskFromProject(projectName, task) {
-        if (this.projects.hasOwnProperty(projectName)) {
-            const projectTasks = this.projects[projectName];
+        if (this.#projects.hasOwnProperty(projectName)) {
+            const projectTasks = this.#projects[projectName];
             const taskIndex = projectTasks.indexOf(task);
             if (taskIndex !== -1) {
                 projectTasks.splice(taskIndex, 1);
@@ -82,16 +82,16 @@ export default class Tasks {
 
     // getting all tasks from array
     getAllTasks() {
-        return this.allTasks;
+        return this.#allTasks;
     }
 
     // getting done tasks from array
     getDoneTasks(){
-        return this.doneTasks;
+        return this.#doneTasks;
     }
 
     getProjectTasks(projectName){
-        const tasks = this.projects[projectName];
+        const tasks = this.#projects[projectName];
         return tasks;
     }
 
@@ -206,7 +206,7 @@ export default class Tasks {
 
         switch (activeTab) {
             case "inbox":
-                tasksToDisplay = this.allTasks.filter(task => !task.classList.contains("done"));
+                tasksToDisplay = this.#allTasks.filter(task => !task.classList.contains("done"));
 
                 if (tasksToDisplay.length === 0) {
                     const noTasksContainer = this.noTasksYet("No tasks yet");
@@ -221,7 +221,7 @@ export default class Tasks {
                 const todayDateString = today.toISOString().split('T')[0];
 
                 // Filter tasks with today's date
-                tasksToDisplay = this.allTasks.filter(task => {
+                tasksToDisplay = this.#allTasks.filter(task => {
                     const taskDate = task.querySelector(".date-input").value;
                     const isUnchecked = !task.querySelector(".custom-checkbox").checked;
                     return taskDate === todayDateString && isUnchecked;
@@ -240,7 +240,7 @@ export default class Tasks {
                 const firstDayOfWeek = new Date(today.setDate(today.getDate() - today.getDay())); // Get the first day of the current week
                 const lastDayOfWeek = new Date(today.setDate(firstDayOfWeek.getDate() + 7)); // Get the last day of the current week
             
-                tasksToDisplay = this.allTasks.filter(task => {
+                tasksToDisplay = this.#allTasks.filter(task => {
                     const taskDate = new Date(task.querySelector(".date-input").value);
                     const isUnchecked = !task.querySelector(".custom-checkbox").checked;
                     return (taskDate >= firstDayOfWeek && taskDate <= lastDayOfWeek) && isUnchecked;
@@ -256,17 +256,17 @@ export default class Tasks {
                 }
                 break;
             case "done":
-                if(this.doneTasks.length === 0){
+                if(this.#doneTasks.length === 0){
                     const noTasksContainer = this.noDoneTasksYet("No done tasks yet");
                     tasksContainer.appendChild(noTasksContainer)
                 } else {
-                    this.doneTasks.forEach(task => {
+                    this.#doneTasks.forEach(task => {
                         tasksContainer.appendChild(task);
                     });
                 }
                 break;
             default:
-                tasksToDisplay = this.projects[activeTab].filter(task => !task.classList.contains("done"));
+                tasksToDisplay = this.#projects[activeTab].filter(task => !task.classList.contains("done"));
 
                 if (tasksToDisplay.length === 0) {
                     const noTasksContainer = this.noTasksYet(`No tasks in project "${activeTab}" yet`);
