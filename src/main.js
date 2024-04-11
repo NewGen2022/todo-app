@@ -8,9 +8,6 @@ export default function generateMain(){
     main.setAttribute("id", "main");
     body.appendChild(main);
 
-    // create sidebar
-    new Sidebar();
-
-    // create main content
+    // create main content and sidebar
     new Content();
 }
