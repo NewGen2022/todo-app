@@ -118,11 +118,34 @@ button{
     margin-bottom: 10px;
 }
 
+.add-new-project-form{
+    display: flex;
+    flex-direction: column;
+    border: none;
+    padding: 20px 15px 20px 15px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
 input[type="text"]{
     border-radius: 5px;
     border: none;
     margin-bottom: 5px;
     padding-left: 7px;
+    outline: none;
+    color: #d3d3d3;
+    font-weight: 500;
+    font-size: 16px;
+    background-color: #232023;
+}
+
+.project-name-form{
+    display: flex;
+    max-width: 300px;
+    border-radius: 5px;
+    border: none;
+    margin: -20px 0 100px 0;
+    padding: 7px 0 7px 10px;
     outline: none;
     color: #d3d3d3;
     font-weight: 500;
@@ -145,18 +168,18 @@ input[type="button"], .edit-task-form-button, .cancel-form-button{
     gap: 5px;
 }
 
-.add-task-form-button, .edit-task-form-button{
+.add-task-form-button, .edit-task-form-button, .add-project-form-button{
     border: 1px solid #2ee700;
 }
-.add-task-form-button:hover, .edit-task-form-button:hover{
+.add-task-form-button:hover, .edit-task-form-button:hover, .add-project-form-button:hover{
     color: #000000;
     background-color: #2ee700;
 }
 
-.cancel-form-button{
+.cancel-form-button, .cancel-project-form-button{
     border: 1px solid #dd2500;
 }
-.cancel-form-button:hover{
+.cancel-form-button:hover, .cancel-project-form-button:hover{
     background-color: #dd2500;
 }
 
@@ -360,6 +383,7 @@ input[type="date"]{
     font-size: 24px;
     font-weight: 900;
     color: rgb(255, 238, 0);
+    margin-top: -5px;
 }
 .no-done-tasks::after{
     background-image: url('../assets/sad.png');
@@ -400,3 +424,19 @@ input[type="date"]{
     transform: scale(1.1);
 }
 /* FOOTER STYLES */
+
+
+
+@media screen and (max-width: 905px) {
+    /* Adjusting button styles for smaller screens */
+    input[type="button"],
+    .edit-task-form-button,
+    .cancel-form-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 50%;
+        text-wrap: pretty;
+        padding: 10px;
+    }
+}
