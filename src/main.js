@@ -1,4 +1,3 @@
-import Sidebar from "./sidebar";
 import Content from "./mainContent";
 
 export default function generateMain(){

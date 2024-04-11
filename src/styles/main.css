@@ -465,8 +465,6 @@ input[type="date"]{
 }
 /* FOOTER STYLES */
 
-
-
 @media screen and (max-width: 905px){
     /* Adjusting button styles for smaller screens */
     input[type="button"],

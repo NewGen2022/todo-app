@@ -1,8 +1,3 @@
-import inboxIcon from  './assets/all.png';
-import todayIcon from  './assets/availability.png';
-import thisWeekIcon from  './assets/bulletin-board.png';
-import doneIcon from "./assets/done.png";
-
 export default class Sidebar{
     constructor(){
         const main = document.getElementById("main");
@@ -45,7 +40,6 @@ export default class Sidebar{
     
         return tab;
     }
-    
 
     // create section for projects
     createProjectSection(){

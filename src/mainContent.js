@@ -1,6 +1,5 @@
 import Task, { tasks } from "./task.js";
 import Sidebar from "./sidebar.js";
-import projectIcon from "./assets/project-management.png";
 import deleteIcon from "./assets/delete.png";
 
 export default class Content {
