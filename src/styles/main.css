@@ -47,7 +47,8 @@ button{
     flex-direction: column;
     background-color: #2f2d2f;
     padding: 30px;
-    width: clamp(220px, 30vw, 300px);
+    width: clamp(220px, 30vw, 320px);
+    min-width: 220px;
 }
 
 .buttonDays, #addProjectBtn{
@@ -103,6 +104,7 @@ button{
 .project-tab{
     display: flex;
     justify-content: space-between;
+    min-width: 170px;
 }
 .project-tab::before {
     background-image: url('../assets/project-management.png');
@@ -218,18 +220,21 @@ hr{
     flex-direction: column;
     flex: 1;
     padding: 50px clamp(50px, 12vw, 200px);
+    box-sizing: border-box;
 }
 
 .headerDay{
-    font-size: 32px;
+    font-size: clamp(24px, 2vw, 32px);
     font-weight: 600;
     margin-bottom: 20px;
+    word-break: break-all;
+    white-space: normal;
 }
 
 .addTaskBtn{
     border: 2px solid rgb(111, 111, 111);
     background: none;
-    font-size: 16px;
+    font-size: clamp(12px, 2vw, 16px);
     background-color: #2f2d2f;
     border-radius: 10px;
     padding: 8px 20px;
@@ -412,7 +417,7 @@ input[type="date"]{
     justify-content: center;
     align-items: center;
     text-align: center;
-    font-size: 24px;
+    font-size: clamp(14px, 2vw, 24px);
     font-weight: 900;
     color: rgb(255, 238, 0);
     margin-top: -5px;
@@ -428,6 +433,9 @@ input[type="date"]{
 
 .no-tasks{
     color: #00c3ff;
+    word-break: break-all;
+    white-space: normal;
+    
 }
 .no-tasks::after{
     background-image: url('../assets/party-popper.png');
@@ -459,7 +467,7 @@ input[type="date"]{
 
 
 
-@media screen and (max-width: 905px) {
+@media screen and (max-width: 905px){
     /* Adjusting button styles for smaller screens */
     input[type="button"],
     .edit-task-form-button,
@@ -470,5 +478,17 @@ input[type="date"]{
         width: 50%;
         text-wrap: pretty;
         padding: 10px;
+    }
+}
+
+@media screen and (max-width: 700px){
+    #main{
+        flex-direction: column;
+        width: 100%;
+    }
+
+    #sidebar{
+        display: flex;
+        width: 100%;
     }
 }
