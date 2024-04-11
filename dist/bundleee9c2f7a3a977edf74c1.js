@@ -957,15 +957,9 @@ var Task = /*#__PURE__*/function () {
     key: "handleIsDoneChange",
     value: function handleIsDoneChange(isDoneCheckbox) {
       var _this3 = this;
-      var activeTab = document.querySelector(".active-tab").id;
       if (isDoneCheckbox.checked) {
         this.taskElement.classList.add("done");
         _allTasks_js__WEBPACK_IMPORTED_MODULE_2__.tasks.addDoneTask(this.taskElement);
-
-        // Remove the task from the project if it belongs to one
-        if (activeTab !== "inbox" && activeTab !== "today" && activeTab !== "thisWeek" && activeTab !== "done") {
-          _allTasks_js__WEBPACK_IMPORTED_MODULE_2__.tasks.removeTaskFromProject(activeTab, this.taskElement);
-        }
       } else {
         this.taskElement.classList.remove("done");
         _allTasks_js__WEBPACK_IMPORTED_MODULE_2__.tasks.removeDoneTask(this.taskElement);
@@ -2478,4 +2472,4 @@ __webpack_require__.r(__webpack_exports__);
 
 /******/ })()
 ;
-//# sourceMappingURL=bundlea2b1306a24a42d3862c3.js.map
+//# sourceMappingURL=bundleee9c2f7a3a977edf74c1.js.map
