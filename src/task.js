@@ -79,16 +79,9 @@ export default class Task {
     }
 
     handleIsDoneChange(isDoneCheckbox){
-        const activeTab = document.querySelector(".active-tab").id;
-    
         if (isDoneCheckbox.checked) {
             this.taskElement.classList.add("done");
             tasks.addDoneTask(this.taskElement);
-    
-            // Remove the task from the project if it belongs to one
-            if (activeTab !== "inbox" && activeTab !== "today" && activeTab !== "thisWeek" && activeTab !== "done") {
-                tasks.removeTaskFromProject(activeTab, this.taskElement);
-            }
         } else {
             this.taskElement.classList.remove("done");
             tasks.removeDoneTask(this.taskElement);
