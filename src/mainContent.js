@@ -1,8 +1,11 @@
 import Task, { tasks } from "./task.js";
+import Sidebar from "./sidebar.js";
 
 export default class Content {
-    // initialize content class
+    // initialize content and sidebar classes
     constructor() {
+        this.sidebar = new Sidebar();
+
         this.main = document.getElementById("main");
 
         this.content = document.createElement("div");
@@ -15,7 +18,6 @@ export default class Content {
         this.sidebarEventListeners();
 
         this.activeTab = null;
-        
     }
 
     // adding event listeners for all sidebar buttons
@@ -30,7 +32,7 @@ export default class Content {
         todayBtn.addEventListener("click", () => this.tabClicked(todayBtn));
         thisWeekBtn.addEventListener("click", () => this.tabClicked(thisWeekBtn));
         doneBtn.addEventListener("click", () => this.tabClicked(doneBtn));
-        addProjectBtn.addEventListener("click", () => this.createAddProjectBtn());
+        addProjectBtn.addEventListener("click", () => this.createProjectForm());
 
         this.tabClicked(inboxBtn);
     }
@@ -60,6 +62,7 @@ export default class Content {
                 this.doneTasks();
                 break;
             default:
+                this.projectsTasks();
                 break;
         }
     }
@@ -91,12 +94,62 @@ export default class Content {
         tasks.displayAll();
     }
 
-    // displaying all content that belongs to inbox tab-button
-    createAddProjectBtn() {
-        this.clearContent();
-        this.createHeaderDay("Add Project");
-        this.createAddTaskBtn();
+    projectsTasks(){
+        console.log("devedveee");
     }
+
+    createProjectForm(){
+        const removeAddProjectBtn = document.getElementById("addProjectBtn");
+        removeAddProjectBtn.style.display = "none";
+
+        const newProjectForm = document.createElement("form");
+        newProjectForm.classList.add("add-new-project-form");
+
+        const projectName = document.createElement("input");
+
+        const buttonContainer = document.createElement("div");
+        buttonContainer.classList.add("add-cancel");
+
+        const addProjectBtn = document.createElement("input");
+        const cancel = document.createElement("input");
+
+        buttonContainer.appendChild(addProjectBtn);
+        buttonContainer.appendChild(cancel);
+
+        projectName.type = "text";
+        projectName.placeholder = "Project name";
+        projectName.classList.add("project-name-form");
+
+
+        addProjectBtn.type = "button";
+        addProjectBtn.value = "Add project";
+        addProjectBtn.classList.add("add-project-form-button");
+        addProjectBtn.addEventListener("click", () => {
+            console.log("New project added")
+            newProjectForm.style.display = "none";
+            removeAddProjectBtn.style.display = "flex";
+        });
+
+        cancel.type = "button";
+        cancel.value = "Cancel";
+        cancel.classList.add("cancel-project-form-button");
+        cancel.addEventListener("click", () => {
+            newProjectForm.style.display = "none";
+            removeAddProjectBtn.style.display = "flex";
+        });
+
+        newProjectForm.appendChild(projectName);
+        newProjectForm.appendChild(buttonContainer);
+
+        const sidebar = document.getElementById("sidebar");
+        sidebar.appendChild(newProjectForm);
+    }
+
+    // // displaying all content that belongs to inbox tab-button
+    // createAddProjectBtn() {
+    //     this.clearContent();
+
+    // }
 
     // method to create header for active tab-button
     createHeaderDay(textContent) {
