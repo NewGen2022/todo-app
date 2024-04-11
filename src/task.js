@@ -4,11 +4,12 @@ import { tasks } from "./allTasks.js";
 
 
 export default class Task {
-    constructor(name, date) {
+    constructor(name, date, activeTab) {
         this.name = name;
         this.date = date;
         this.taskElement = this.createTaskElement();
-        tasks.addTask(this.taskElement);
+
+        tasks.addTask(this.taskElement, activeTab);
 
         this.taskElement.querySelector(".delete").addEventListener("click", this.deleteTaskHandler.bind(this));
     
@@ -78,19 +79,25 @@ export default class Task {
     }
 
     handleIsDoneChange(isDoneCheckbox){
+        const activeTab = document.querySelector(".active-tab").id;
+    
         if (isDoneCheckbox.checked) {
             this.taskElement.classList.add("done");
             tasks.addDoneTask(this.taskElement);
+    
+            // Remove the task from the project if it belongs to one
+            if (activeTab !== "inbox" && activeTab !== "today" && activeTab !== "thisWeek" && activeTab !== "done") {
+                tasks.removeTaskFromProject(activeTab, this.taskElement);
+            }
         } else {
             this.taskElement.classList.remove("done");
             tasks.removeDoneTask(this.taskElement);
         }
-
+    
         setTimeout(() => {
             this.taskElement.remove();
             tasks.displayNoTasksMessage();
         }, 450);
-
     }
     
     createTaskName() {
@@ -161,7 +168,18 @@ export default class Task {
     // delete task
     deleteTaskHandler() {
         tasks.removeTask(this.taskElement);
+        this.removeFromProject();
         this.taskElement.remove();
+    }
+
+    // deleting task from specific project
+    removeFromProject() {
+        const activeTab = document.querySelector(".active-tab").id;
+        
+        // If the task belongs to a project, remove it from the project
+        if (activeTab !== "inbox" && activeTab !== "today" && activeTab !== "thisWeek" && activeTab !== "done") {
+            tasks.removeTaskFromProject(activeTab, this.taskElement);
+        }
     }
 
     // updating task date
@@ -241,7 +259,6 @@ export default class Task {
         const taskNameElement = this.taskElement.querySelector(".task-name");
         taskNameElement.textContent = newName;
         this.taskElement.name = newName;
-        console.log(this.taskElement)
     
         // Update task date displayed in the UI
         this.updateTaskDate(newDate)
@@ -276,8 +293,6 @@ export default class Task {
             const formattedDate = dateObj.toLocaleDateString("en-GB", options);
 
             overlay.placeholder = formattedDate;
-            console.log(formattedDate)
-            console.log(overlay.placeholder)
         }
     }
 }
