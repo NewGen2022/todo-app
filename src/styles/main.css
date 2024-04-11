@@ -53,15 +53,20 @@ button{
 .buttonDays, #addProjectBtn{
     display: flex;
     align-items: center;
+    text-align: start;
     border: none;
     background: none;
     color: #dddddd;
-    padding: 10px 20px;
+    padding: 0px 10% 0px 20px;
     font-size: clamp(14px, 2vw, 16px);
     font-weight: 700;
     border-radius: 10px;
     margin-bottom: 10px;
     gap: 10px;
+    text-wrap: wrap;
+}
+#addProjectBtn{
+    justify-content: center;
 }
 .buttonDays:hover{
     transform: scale(1.05);
@@ -95,10 +100,26 @@ button{
     background-image: url('../assets/done.png');
 }
 
+.project-tab{
+    display: flex;
+    justify-content: space-between;
+}
+.project-tab::before {
+    background-image: url('../assets/project-management.png');
+    min-width: 30px;
+    min-height: 30px;
+}
+
+.tab-text{
+    word-break: break-all;
+    white-space: normal;
+}
+
 #addProjectBtn{
     background-color: #232023;
     margin: 0 10px;
     font-size: clamp(12px, 2vw, 14px);
+    padding: 10px;
 }
 #addProjectBtn:hover{
     background-color: #545454;
@@ -218,7 +239,8 @@ hr{
 .addTaskBtn:hover{
     border: 2px solid rgb(173, 173, 173);
     background-color: #696769;
-    transform: scale(1.01);
+    transform: scale(1.05);
+    font-weight: 600;
 }
 .addTaskBtn:active{
     transform: scale(1);
@@ -343,7 +365,7 @@ input[type="date"]{
     background-color: #444444;
 }
 
-.buttons{
+.buttons, .delete-project{
     display: flex;
     gap: 5px;
     align-items: center;
@@ -363,13 +385,22 @@ input[type="date"]{
     margin-top: 5px;
 }
 
-.edit, .delete{
+.edit, .delete, .delete-project{
     background: none;
     border: none;
 }
 
+.delete-project img{
+    width: 20px;
+    height: 20px;
+}
+
 .edit:hover, .delete:hover{
     transform: scale(1.07);
+}
+
+.delete-project:hover{
+    transform: scale(1.2);
 }
 
 .edit:active, .delete:active{
@@ -379,7 +410,8 @@ input[type="date"]{
 .no-done-tasks, .no-tasks{
     display: flex;
     justify-content: center;
-    align-items: end;
+    align-items: center;
+    text-align: center;
     font-size: 24px;
     font-weight: 900;
     color: rgb(255, 238, 0);
