@@ -66,7 +66,6 @@ export default class Content {
                 break;
             default:
                 this.displayProjectTasks(this.activeTab);
-                console.log(this.activeTab)
                 break;
         }
     }
@@ -98,12 +97,15 @@ export default class Content {
         tasks.displayAll();
     }
 
+    // displaying specific project tasks
     displayProjectTasks(projectName){
         this.clearContent()
         this.createHeaderDay(projectName);
+        tasks.displayAll();
         this.createAddTaskBtn();
     }
 
+    // when project is added make the project tab and display "add project" button
     addProjectButtonGeneration(newProjectForm, projectName, event="cancel"){
         if(event === "add"){
             const isProjectAdded = tasks.addProject(projectName.value);
@@ -134,6 +136,7 @@ export default class Content {
         ProjectBtn.addEventListener("click", () => this.createProjectForm())
     }
 
+    // handler for deleting project
     deleteProjectHandler(projectName){
         const projectToDelete = document.getElementById(projectName);
         projectToDelete.remove();
@@ -144,6 +147,7 @@ export default class Content {
         }
     }
 
+    // create form for adding new project
     createProjectForm(){
         const removeAddProjectBtn = document.getElementById("addProjectBtn");
         removeAddProjectBtn.remove();
@@ -281,7 +285,7 @@ export default class Content {
     // adding new task 
     addNewTask(taskText, date=None){
         if(taskText){
-            const newTask = new Task(taskText, date);
+            const newTask = new Task(taskText, date, this.activeTab);
             return newTask;
         }
     }
