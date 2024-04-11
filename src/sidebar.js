@@ -12,13 +12,13 @@ export default class Sidebar{
         this.sidebar.setAttribute("id", "sidebar");
 
         // create tab for displaying inbox (all) tasks
-        this.createTab(inboxIcon, "Inbox", "inbox");
+        this.createTab("Inbox", "inbox");
         // create tab for displaying today tasks
-        this.createTab(todayIcon, "Today", "today");
+        this.createTab("Today", "today");
         // create tab for displaying tasks for this week
-        this.createTab(thisWeekIcon, "This week", "thisWeek");
+        this.createTab("This week", "thisWeek");
         // create tab for displaying done tasks
-        this.createTab(doneIcon, "Done", "done");
+        this.createTab("Done", "done");
         
         // create section for projects
         this.createProjectSection();
@@ -28,21 +28,24 @@ export default class Sidebar{
     }
 
     // creating different tabs in sidebar
-    createTab(tabIcon, textContent, id){
+    createTab(textContent, id) {
         const tab = document.createElement("button");
-        const tabImg = document.createElement("img");
+        const tabText = document.createElement("p");
+        tabText.classList.add("tab-text");
 
-        tabImg.src = tabIcon;
-        tab.appendChild(tabImg);
-        
-        tab.textContent = textContent;
+        // Set the text content of the text element
+        tabText.textContent = textContent;
+    
+        tab.appendChild(tabText);
+    
         tab.classList.add("buttonDays", "with-icon");
         tab.setAttribute("id", id);
-
+    
         this.sidebar.appendChild(tab);
-
+    
         return tab;
     }
+    
 
     // create section for projects
     createProjectSection(){
