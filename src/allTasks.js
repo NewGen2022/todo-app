@@ -5,6 +5,7 @@ export default class Tasks {
     constructor() {
         this.allTasks = [];
         this.doneTasks = [];
+        this.projects = {};
     }
 
     // adding task to array with all tasks
@@ -15,6 +16,17 @@ export default class Tasks {
     // adding task to array with done tasks
     addDoneTask(doneTask){
         this.doneTasks.push(doneTask);
+    }
+
+    addProject(projectName){
+        if (projectName.trim() !== '') {
+            this.projects[projectName] = [];
+            console.log(this.projects);
+            return true;
+        } else {
+            console.error("Project name cannot be empty");
+            return false;
+        }
     }
 
     // removing task from array with all/done tasks
@@ -34,11 +46,18 @@ export default class Tasks {
         this.displayNoTasksMessage();
     }
 
+    // removing task from done tasks array
     removeDoneTask(taskElement){
         const index = this.doneTasks.indexOf(taskElement);
         if (index !== -1) {
             this.doneTasks.splice(index, 1);
         }
+    }
+
+    removeProject(projectName){
+        delete this.projects[projectName];
+        console.log(this.projects);
+        console.log(projectName);
     }
 
     // getting all tasks from array
@@ -49,6 +68,11 @@ export default class Tasks {
     // getting done tasks from array
     getDoneTasks(){
         return this.doneTasks;
+    }
+
+    getProjectTasks(projectName){
+        const tasks = this.projects[projectName];
+        return tasks;
     }
 
     // setting min and max date that person can add task on
