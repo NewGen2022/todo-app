@@ -9,8 +9,16 @@ export default class Tasks {
     }
 
     // adding task to array with all tasks
-    addTask(task) {
-        this.allTasks.push(task);
+    addTask(task, activeTab) {
+        if (activeTab && activeTab !== "inbox" && activeTab !== "today" && activeTab !== "thisWeek" && activeTab !== "done") {
+            if (this.projects.hasOwnProperty(activeTab)) {
+                this.projects[activeTab].push(task);
+            } else {
+                console.error(`Project '${activeTab}' does not exist.`);
+            }
+        } else {
+            this.allTasks.push(task);
+        }
     }
 
     // adding task to array with done tasks
@@ -18,10 +26,10 @@ export default class Tasks {
         this.doneTasks.push(doneTask);
     }
 
+    // adding specific project
     addProject(projectName){
         if (projectName.trim() !== '') {
             this.projects[projectName] = [];
-            console.log(this.projects);
             return true;
         } else {
             console.error("Project name cannot be empty");
@@ -54,10 +62,22 @@ export default class Tasks {
         }
     }
 
+    // deleting specific project
     removeProject(projectName){
         delete this.projects[projectName];
-        console.log(this.projects);
-        console.log(projectName);
+    }
+
+    // deleting task from the specific project
+    removeTaskFromProject(projectName, task) {
+        if (this.projects.hasOwnProperty(projectName)) {
+            const projectTasks = this.projects[projectName];
+            const taskIndex = projectTasks.indexOf(task);
+            if (taskIndex !== -1) {
+                projectTasks.splice(taskIndex, 1);
+            }
+        } else {
+            console.error(`Project '${projectName}' does not exist.`);
+        }
     }
 
     // getting all tasks from array
@@ -160,8 +180,7 @@ export default class Tasks {
                     noTasksContainer = this.noDoneTasksYet("No done tasks yet");
                     break;
                 default:
-                    noTasksContainer = document.createElement("p");
-                    noTasksContainer.textContent = "No tasks for this tab yet";
+                    noTasksContainer = this.noTasksYet(`No tasks in project "${activeTab}" yet`);
                     break;
             }
             tasksContainer.appendChild(noTasksContainer);
@@ -247,6 +266,16 @@ export default class Tasks {
                 }
                 break;
             default:
+                tasksToDisplay = this.projects[activeTab].filter(task => !task.classList.contains("done"));
+
+                if (tasksToDisplay.length === 0) {
+                    const noTasksContainer = this.noTasksYet(`No tasks in project "${activeTab}" yet`);
+                    tasksContainer.appendChild(noTasksContainer);
+                } else {
+                    tasksToDisplay.forEach(task => {
+                        tasksContainer.appendChild(task);
+                    });
+                }
                 break;
         }
 
