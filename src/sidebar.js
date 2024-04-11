@@ -49,15 +49,23 @@ export default class Sidebar{
         const projectsHeader = document.createElement("h2");
         projectsHeader.textContent = "Projects";
 
+        this.sidebar.appendChild(projectsHeader);
+        
+        const projectsButton = this.createProjectBtn();
+
+        return { projectsHeader, projectsButton };
+    }
+
+    createProjectBtn(){
         const projectsButton = document.createElement("button");
         projectsButton.textContent = "Add project";
 
         projectsButton.setAttribute("id", "addProjectBtn");
         projectsButton.classList.add("buttonDays", "with-icon");
 
-        this.sidebar.appendChild(projectsHeader);
+        
         this.sidebar.appendChild(projectsButton);
 
-        return { projectsHeader, projectsButton };
+        return projectsButton;
     }
 }
